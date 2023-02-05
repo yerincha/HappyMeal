@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Router from 'next/router';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Box from '@mui/material/Box';
 import Typography from '../../../src/modules/components/Typography';
@@ -13,7 +14,7 @@ import withRoot from '../../../src/modules/withRoot';
 
 function ForgotPassword() {
   const [sent, setSent] = React.useState(false);
-
+  const [disable, setDisable] = React.useState(true);
   const validate = (values: { [index: string]: string }) => {
     const errors = required(['email'], values);
 
@@ -21,7 +22,12 @@ function ForgotPassword() {
       const emailError = email(values.email);
       if (emailError) {
         errors.email = emailError;
-      }
+      } 
+      setDisable(true);
+    }
+    console.log(errors)
+    if(Object.keys(errors).length === 0) {
+      setDisable(false)
     }
 
     return errors;
@@ -29,6 +35,8 @@ function ForgotPassword() {
 
   const handleSubmit = () => {
     setSent(true);
+    Router.replace('/signin');
+
   };
 
   return (
@@ -61,6 +69,7 @@ function ForgotPassword() {
                 name="email"
                 required
                 size="large"
+                id='email'
               />
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>
@@ -73,12 +82,13 @@ function ForgotPassword() {
               </FormSpy>
               <FormButton
                 sx={{ mt: 3, mb: 2 }}
-                disabled={submitting || sent}
+                disabled={disable || !email}
                 size="large"
                 color="secondary"
                 fullWidth
+                id='sendEmail'
               >
-                {submitting || sent ? 'In progress…' : 'Reset Password'}
+                {'Reset Password'}
               </FormButton>
             </Box>
           )}

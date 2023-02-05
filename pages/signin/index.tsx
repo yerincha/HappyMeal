@@ -42,7 +42,6 @@ function SignIn() {
     signIn(values.email, values.password)
       .then(({user}) => {
         if (user.uid) {
-
           Router.replace('/');
         }
       })
@@ -75,7 +74,7 @@ function SignIn() {
           </Typography>
           <Typography variant='body2' align='center'>
             {'No account yet? '}
-            <Link href='/signup' align='center' underline='always'>
+            <Link href='/signup' align='center' underline='always' id='redirectSignUpButton'>
               Sign up
             </Link>
           </Typography>
@@ -139,12 +138,12 @@ function SignIn() {
           )}
         </Form>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity='error' sx={{ width: '100%' }}>
+          <Alert onClose={handleClose} severity='error' sx={{ width: '100%' }} id='formErrorMessage'>
             Please try again
           </Alert>
         </Snackbar>
         <Typography align='center'>
-          <Link underline='always' href='/signin/forgotpassword/'>
+          <Link underline='always' href='/signin/forgotpassword/' id='redirectForgotPassword'>
             Fotgot password?
           </Link>
         </Typography>
