@@ -14,7 +14,6 @@ const rightLink = {
 
 function AppAppBar() {
   const { user, userData, userSignOut }  = UserAuth();
-  console.log(user, userData)
   const handleLogout = async () => {
     try {
       await userSignOut();
@@ -37,25 +36,25 @@ function AppAppBar() {
             href='/'
             sx={{ fontSize: 24 }}
           >
-            {'CareMySelf'}
+            {'HappyMeal'}
           </Link>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
             <Link
               color='inherit'
               variant='h6'
               underline='none'
-              href='/symptoms'
+              href='/search'
               sx={rightLink}
             >
-              {'Symptom Log'}
+              {'my fridge'}
             </Link>
             <Link
               variant='h6'
               underline='none'
-              href='/possiblediseases'
+              href='/recipes'
               sx={rightLink}
             >
-              {'Possible Diseases'}
+              {'Recipes'}
             </Link>
           </Box>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
@@ -81,14 +80,14 @@ function AppAppBar() {
                 {'Sign in'}
               </Link>
             )}
-            {user && userData && userData.name !== undefined ? (
+            {user && userData && userData.firstname !== undefined ? (
               <Link
                 variant='h6'
                 underline='none'
                 href='/'
                 sx={{ ...rightLink, color: 'secondary.main' }}
               >
-                {userData.name + ` (${userData.kidName}) ` + '님'}
+                {userData.firstname}
               </Link>
             ) : (
               <Link

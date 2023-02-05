@@ -2,24 +2,24 @@ import { QueryDocumentSnapshot } from "firebase/firestore";
 
 class User {
     id: string | undefined;
-    name: string | undefined;
-    kidName: string | undefined;
+    firstname: string | undefined;
+    lastname: string | undefined;
     UID: string | undefined;
     email: string | undefined;
 
     public static fromFirestore(queryDocumentSnapshot: QueryDocumentSnapshot): User {
         const user = new User();
         user.id = queryDocumentSnapshot.id;
-        user.name = queryDocumentSnapshot.data()["name"];
-        user.kidName = queryDocumentSnapshot.data()["kidName"];
+        user.firstname = queryDocumentSnapshot.data()["firstname"];
+        user.lastname = queryDocumentSnapshot.data()["lastname"];
         user.UID = queryDocumentSnapshot.data()["UID"];
         return user;
     }
 
-    public static init(name: string, kidName: string, UID: string, email: string): User {
+    public static init(firstname: string, lastname: string, UID: string, email: string): User {
         const user = new User();
-        user.name = name;
-        user.kidName = kidName;
+        user.firstname = firstname;
+        user.lastname = lastname;
         user.UID = UID;
         user.email= email;
         return user;
@@ -28,8 +28,8 @@ class User {
 
     public toObject(): object {
         return {
-            name: this.name,
-            kidName: this.kidName,
+            firstname: this.firstname,
+            lastname: this.lastname,
             UID: this.UID
         };
     }
