@@ -26,7 +26,7 @@ function SignUp() {
   const { createUser } = UserAuth();
 
   const handleValidate = (values: Record<string, string>) => {
-    const errors = required(['name', 'kidName', 'email', 'password'], values);
+    const errors = required(['firstname', 'lastname', 'email', 'password'], values);
     if (!values.email) {
       errors.email = 'required';
     } else if (
@@ -44,11 +44,11 @@ function SignUp() {
       errors.password =
         'length of password should be 7-15, at least 1 number and 1 special character required';
     }
-    if (!values.name) {
-      errors.name = 'required';
+    if (!values.firstname) {
+      errors.firstname = 'required';
     }
-    if (!values.kidName) {
-      errors.kidName = 'required';
+    if (!values.lastname) {
+      errors.lastname = 'required';
     }
     return errors;
   };
@@ -56,16 +56,16 @@ function SignUp() {
   const handleSubmit = (values: {
     email: string;
     password: string;
-    name: string;
-    kidName: string;
+    firstname: string;
+    lastname: string;
   }) => {
-    const { email, password, name, kidName } = values;
+    const { email, password, firstname, lastname } = values;
 
     createUser(email, password)
       .then((data: { user: { uid: string } }) => {
         setSent(true);
         APIService.getInstance().addUser(
-          User.init(name, kidName, data.user.uid, email)
+          User.init(firstname, lastname, data.user.uid, email)
         );
         Router.replace('/');
       })
@@ -95,7 +95,7 @@ function SignUp() {
             Sign up
           </Typography>
           <Typography variant='body2' align='center'>
-            <Link href='/signin' underline='always'>
+            <Link href='/signin' underline='always' id='signIn'>
               Already have an account?
             </Link>
           </Typography>
@@ -118,7 +118,7 @@ function SignUp() {
                     autoFocus
                     component={RFTextField}
                     disabled={submitting || sent}
-                    autoComplete='name'
+                    autoComplete='firstname'
                     fullWidth
                     label='First Name'
                     name='firstname'
@@ -130,6 +130,7 @@ function SignUp() {
                     component={RFTextField}
                     disabled={submitting || sent}
                     fullWidth
+                    autoComplete='lastname'
                     label='Last Name'
                     name='lastname'
                     required
