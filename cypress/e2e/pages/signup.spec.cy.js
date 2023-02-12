@@ -27,7 +27,7 @@ describe('/signup', function () {
   it('Signs user up with valid credentials', function () {
     doSignUp(validAccount, validPassword);
     cy.url().should('include', homeUrl);
-  });
+  }); 
 
   it('Displays error if there is an unfilled input', function () {
     visitSignUpPage();

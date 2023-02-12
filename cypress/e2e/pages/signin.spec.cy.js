@@ -37,6 +37,19 @@ describe("/signin", () => {
     cy.url().should(includeString, HOME_URL);
   });
 
+  it("Empty email input login test", () => {
+    cy.get("[name='email']").click();
+    cy.get("body").click(0,0);
+    cy.get("[data-testid='email'").contains('Required');
+  });
+
+  it("Empty password input login test", () => {
+    cy.get("[name='email']").type(validEmail);
+    cy.get("[name='password']").click();
+    cy.get("body").click(0,0);
+    cy.get("[data-testid='password'").contains('Required');
+  });
+
   it("Unregistered user login test", () => {
     cy.get("[name='email']").type(generateRandomEmail());
     cy.get("[name='password']").type(validPassword);

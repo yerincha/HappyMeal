@@ -3,7 +3,7 @@ import { getElementById, getElementByType } from "../../cypressUtils";
 
 const forgotPasswordUrl = "/signin/forgotpassword";
 const signupUrl = "/signup";
-
+const signinUrl = "/signin";
 const validEmail = "test@sequences.app";
 const invalidEmail = "test";
 
@@ -28,6 +28,17 @@ describe("/forgotpassword", () => {
     cy.get(getElementById(SEND_EMAIL)).should("be.visible");
   });
 
+  it("valid email send email test 2", () => {
+    cy.get(getElementById(EMAIL)).type(validEmail);
+    cy.get(getElementByType(SUBMIT)).click();
+    cy.url().should('include', signinUrl);
+  });
+
+  it('Redirects to Sign up', function () {
+    cy.get("[id='redirectSignUpButton']").click();
+    cy.url().should('include', signupUrl);
+  });
+
   it("unfilled email input error message test", () => {
     cy.get(getElementById(EMAIL)).click();
     cy.get("body").click();
@@ -41,4 +52,5 @@ describe("/forgotpassword", () => {
     cy.contains("Invalid email");
     cy.get(getElementById(SEND_EMAIL)).should("be.disabled");
   });
+
 });
