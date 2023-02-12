@@ -38,10 +38,12 @@ function SignIn() {
     return errors;
   };
 
+  type userObj = {[key: string]: {uid: string}}
   const handleSubmit = (values: { email: string; password: string; }) => {
     signIn(values.email, values.password)
-      .then(({user}) => {
+      .then(({user} : userObj) => {
         if (user.uid) {
+          console.log(typeof user.uid)
           Router.replace('/');
         }
       })
@@ -73,9 +75,8 @@ function SignIn() {
             Sign in
           </Typography>
           <Typography variant='body2' align='center'>
-            {'No account yet? '}
             <Link href='/signup' align='center' underline='always' id='redirectSignUpButton'>
-              Sign up
+            No account yet? Sign up
             </Link>
           </Typography>
         </React.Fragment>
@@ -143,7 +144,7 @@ function SignIn() {
           </Alert>
         </Snackbar>
         <Typography align='center'>
-          <Link underline='always' href='/signin/forgotpassword/' id='redirectForgotPassword'>
+          <Link underline='always' href='/signin/forgotpassword' id='redirectForgotPassword'>
             Fotgot password?
           </Link>
         </Typography>

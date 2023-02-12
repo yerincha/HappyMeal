@@ -76,8 +76,8 @@ function Search() {
             </Box>
           )}
         />
-        {data.length > 0 &&
-          data.map((item, i) => (
+        {data.length > 0  &&
+          data.map((item: {name: string} , i) => (
             <Button key={i} variant='outlined'>
               {item.name}
             </Button>
