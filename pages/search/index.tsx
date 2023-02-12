@@ -18,7 +18,6 @@ function Search() {
   const [data, setData] = useState([]);
 
   const handleSearch = (values: { ingredient: string }) => {
-    console.log(values.ingredient);
     const options = {
       method: 'GET',
       url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/search',

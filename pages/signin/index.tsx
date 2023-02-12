@@ -43,15 +43,13 @@ function SignIn() {
     signIn(values.email, values.password)
       .then(({user} : userObj) => {
         if (user.uid) {
-          console.log(typeof user.uid)
           Router.replace('/');
         }
       })
       .catch((error: { code: string; message: string; }) => {
-        console.log(error.code)
-        console.log(error.message)
-        console.error(error)
-        setOpen(true);
+        if(error.code !== 'auth/missing-email') {
+          setOpen(true);
+        }
       });
   };
 
@@ -91,6 +89,7 @@ function SignIn() {
               onSubmit={handleSubmit2}
               noValidate
               sx={{ mt: 6 }}
+              data-testid='signin--form'
             >
               <Field
                 autoComplete='email'
@@ -101,6 +100,7 @@ function SignIn() {
                 label='Email'
                 margin='normal'
                 name='email'
+                data-testid='email'
                 required
                 size='large'
               />
@@ -114,6 +114,7 @@ function SignIn() {
                 autoComplete='current-password'
                 label='Password'
                 type='password'
+                data-testid='password'
                 margin='normal'
               />
               <FormSpy subscription={{ submitError: true }}>
@@ -132,6 +133,7 @@ function SignIn() {
                 color='secondary'
                 fullWidth
                 onClick={handleSubmit}
+                data-testid='signIn'
               >
                 {submitting || sent ? 'Please wait' : 'Sign in'}
               </FormButton>
@@ -145,7 +147,7 @@ function SignIn() {
         </Snackbar>
         <Typography align='center'>
           <Link underline='always' href='/signin/forgotpassword' id='redirectForgotPassword'>
-            Fotgot password?
+            Forgot password?
           </Link>
         </Typography>
       </AppForm>

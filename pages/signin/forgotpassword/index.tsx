@@ -3,6 +3,7 @@ import Router from 'next/router';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Box from '@mui/material/Box';
 import Typography from '../../../src/modules/components/Typography';
+import Link from '@mui/material/Link';
 import AppFooter from '../../../src/modules/views/AppFooter';
 import AppAppBar from '../../../src/modules/views/AppAppBar';
 import AppForm from '../../../src/modules/views/AppForm';
@@ -22,12 +23,12 @@ function ForgotPassword() {
       const emailError = email(values.email);
       if (emailError) {
         errors.email = emailError;
-      } 
+      }
       setDisable(true);
     }
-    console.log(errors)
-    if(Object.keys(errors).length === 0) {
-      setDisable(false)
+    console.log(errors);
+    if (Object.keys(errors).length === 0) {
+      setDisable(false);
     }
 
     return errors;
@@ -36,7 +37,6 @@ function ForgotPassword() {
   const handleSubmit = () => {
     setSent(true);
     Router.replace('/signin');
-
   };
 
   return (
@@ -44,11 +44,16 @@ function ForgotPassword() {
       <AppAppBar />
       <AppForm>
         <React.Fragment>
-          <Typography variant="h3" gutterBottom marked="center" align="center">
+          <Typography variant='h3' gutterBottom marked='center' align='center'>
             Forgot Password
           </Typography>
-          <Typography variant="body2" align="center">
-            {"We will send you an email with a link for resetting password"}
+          <Typography variant='body2' align='center'>
+            {'We will send you an email with a link for resetting password'}
+          </Typography>
+          <Typography variant='body2' align='center'>
+            <Link href='/signup' align='center' underline='always' id='redirectSignUpButton'>
+            No account yet? Sign up
+            </Link>
           </Typography>
         </React.Fragment>
         <Form
@@ -57,19 +62,26 @@ function ForgotPassword() {
           validate={validate}
         >
           {({ handleSubmit: handleSubmit2, submitting }) => (
-            <Box component="form" onSubmit={handleSubmit2} noValidate sx={{ mt: 6 }}>
+            <Box
+              data-testid='forgotpassword--form'
+              component='form'
+              onSubmit={handleSubmit2}
+              noValidate
+              sx={{ mt: 6 }}
+            >
               <Field
                 autoFocus
-                autoComplete="email"
+                autoComplete='email'
                 component={RFTextField}
                 disabled={submitting || sent}
                 fullWidth
-                label="Email"
-                margin="normal"
-                name="email"
+                label='Email'
+                margin='normal'
+                name='email'
                 required
-                size="large"
+                size='large'
                 id='email'
+                data-testid='email'
               />
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>
@@ -83,10 +95,11 @@ function ForgotPassword() {
               <FormButton
                 sx={{ mt: 3, mb: 2 }}
                 disabled={disable || !email}
-                size="large"
-                color="secondary"
+                size='large'
+                color='secondary'
                 fullWidth
                 id='sendEmail'
+                data-testid='sendEmail'
               >
                 {'Reset Password'}
               </FormButton>

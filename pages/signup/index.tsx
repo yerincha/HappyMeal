@@ -122,6 +122,7 @@ function SignUp() {
                     fullWidth
                     label='First Name'
                     name='firstname'
+                    data-testid="firstName"
                     required
                   />
                 </Grid>
@@ -133,6 +134,7 @@ function SignUp() {
                     autoComplete='lastname'
                     label='Last Name'
                     name='lastname'
+                    data-testid='lastName'
                     required
                   />
                 </Grid>
@@ -145,6 +147,7 @@ function SignUp() {
                 label='Email'
                 margin='normal'
                 name='email'
+                data-testid='email'
                 required
               />
               <Field
@@ -156,6 +159,7 @@ function SignUp() {
                 autoComplete='new-password'
                 label='Password'
                 type='password'
+                data-testid='password'
                 margin='normal'
               />
               <FormSpy subscription={{ submitError: true }}>
@@ -173,14 +177,15 @@ function SignUp() {
                 color='secondary'
                 fullWidth
                 onClick={handleSubmit}
+                data-testid='submitButton'
               >
-                {submitting || sent ? 'Please wait' : 'Sign up'}
+                {'Sign Up for free'}
               </FormButton>
             </Box>
           )}
         </Form>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity='error' sx={{ width: '100%' }}>
+          <Alert onClose={handleClose} severity='error' sx={{ width: '100%' }} data-testid='formErrorMessage'>
             Please Try again
           </Alert>
         </Snackbar>
