@@ -7,11 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "next test --watchAll=false --coverage=true",
+    "test": "react-scripts test --watchAll=false --coverage=true",
     "test:watch": "next test",
     "cy:open": "cypress open",
     "cy:run": "cypress run --spec \"cypress/integration/pages/**/*\"",
-    "cy:test":  "start-server-and-test dev 3000 cy:open"
+    "cy:test": "start-server-and-test dev 3000 cy:open"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -27,10 +27,18 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-final-form": "^6.5.9",
+    "react-scripts": "^5.0.1",
+    "react-testing-library": "^8.0.1",
     "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "5.16.4",
+    "@testing-library/user-event": "14.2.0",
+    "@types/react": "18.0.9",
+    "@types/testing-library__jest-dom": "5.14.5",
+    "jest": "28.1.0",
+    "jest-environment-jsdom": "28.1.0",
     "cypress": "^12.5.1"
   }
 }
