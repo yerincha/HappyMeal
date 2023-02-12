@@ -17,7 +17,7 @@ export default function ProductHero() {
       }}
     >
       <Typography color="inherit" align="center" variant="h2" marked="center">
-        Welcome to CAREMYSELF
+        Welcome to HAPPYMEAL
       </Typography>
       <Typography
         color="inherit"
