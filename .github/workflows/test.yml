@@ -1,0 +1,26 @@
+name: Unit test and e2e test
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Install dependencies
+      run: npm --frozen-lock
+    # run unit test
+    - run: npm test
+    # run e2e test
+    - name: Cypress run
+      uses: cypress-io/github-action@v2
+      with:
+        start: npm start
+        wait-on: 'http://localhost:3000'
+        wait-on-timeout: 120
