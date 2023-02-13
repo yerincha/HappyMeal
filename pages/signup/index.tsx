@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
-import { UserAuth } from '../../src/context/AuthContext';
+import { useAuth } from '../../src/context/AuthContext';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
@@ -18,15 +18,18 @@ import FormFeedback from '../../src/modules/form/FormFeedback';
 import withRoot from '../../src/modules/withRoot';
 import APIService from '../../src/api/APIService';
 import User from '../../src/model/User';
-
+import {auth} from '../../src/firebase'
 function SignUp() {
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [sent, setSent] = useState(false);
-  const { createUser } = UserAuth();
+  const { user, signup, updateUserProfile, signout } = useAuth();
 
   const handleValidate = (values: Record<string, string>) => {
-    const errors = required(['firstname', 'lastname', 'email', 'password'], values);
+    const errors = required(
+      ['firstname', 'lastname', 'email', 'password'],
+      values
+    );
     if (!values.email) {
       errors.email = 'required';
     } else if (
@@ -60,19 +63,19 @@ function SignUp() {
     lastname: string;
   }) => {
     const { email, password, firstname, lastname } = values;
-
-    createUser(email, password)
-      .then((data: { user: { uid: string } }) => {
-        setSent(true);
-        APIService.getInstance().addUser(
-          User.init(firstname, lastname, data.user.uid, email)
-        );
-        Router.replace('/');
-      })
-      .catch((error: any) => {
-        console.log(error);
-        setOpen(true);
-      });
+    signup(email, password)
+    .then(() => {
+      const user = auth.currentUser;
+      updateUserProfile(user, firstname, lastname);
+    })
+    .then(() => {
+      setSent(true);
+      Router.replace('/signin');
+    })
+    .catch((error: any) => {
+      console.log(error);
+      setOpen(true);
+    });
   };
 
   const handleClose = (
@@ -122,7 +125,7 @@ function SignUp() {
                     fullWidth
                     label='First Name'
                     name='firstname'
-                    data-testid="firstName"
+                    data-testid='firstName'
                     required
                   />
                 </Grid>
@@ -185,7 +188,12 @@ function SignUp() {
           )}
         </Form>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity='error' sx={{ width: '100%' }} data-testid='formErrorMessage'>
+          <Alert
+            onClose={handleClose}
+            severity='error'
+            sx={{ width: '100%' }}
+            data-testid='formErrorMessage'
+          >
             Please Try again
           </Alert>
         </Snackbar>

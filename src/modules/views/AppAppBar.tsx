@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import AppBar from '../components/AppBar';
 import Toolbar from '../components/Toolbar';
-import { UserAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const rightLink = {
   fontSize: 16,
@@ -13,10 +13,10 @@ const rightLink = {
 };
 
 function AppAppBar() {
-  const { user, userData, userSignOut }  = UserAuth();
+  const { user, signout }  = useAuth();
   const handleLogout = async () => {
     try {
-      await userSignOut();
+      await signout();
       Router.replace('/')
       console.log('sign out complete');
     } catch (e: any) {
@@ -80,14 +80,13 @@ function AppAppBar() {
                 {'Sign in'}
               </Link>
             )}
-            {user && userData && userData.firstname !== undefined ? (
+            {user !== null ? (
               <Link
                 variant='h6'
                 underline='none'
                 href='/'
                 sx={{ ...rightLink, color: 'secondary.main' }}
               >
-                {userData.firstname}
               </Link>
             ) : (
               <Link
