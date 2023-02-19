@@ -7,15 +7,23 @@ import AppForm from '../../src/modules/views/AppForm';
 import Box from '@mui/material/Box';
 import Typography from '../../src/modules/components/Typography';
 import withRoot from '../../src/modules/withRoot';
-import { Button } from '@mui/material';
+import { Grid } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import RFTextField from '../../src/modules/form/RFTextField';
-import FormButton from '../../src/modules/form/FormButton';
 import { API_KEY } from '../../src/credentials';
 import axios from 'axios';
+import APIService from '../../src/api/APIService';
+import { useAuth } from '../../src/context/AuthContext';
+import Item from '../../src/model/Item';
+import SearchedItem from '../../src/modules/components/SearchedItem';
+import LoadedItem from '../../src/modules/components/LoadedItem';
+import { Timestamp } from 'firebase/firestore';
 
 function Search() {
-  const [data, setData] = useState([]);
+  const { user } = useAuth();
+  const [searchResults, setSearchResults] = useState([]);
+  const [loadedItems, setLoadedItems] = useState(new Array<Item>());
+  const [selected, setSelected] = useState();
 
   const handleSearch = (values: { ingredient: string }) => {
     const options = {
@@ -35,53 +43,104 @@ function Search() {
       .request(options)
       .then(function (response) {
         const result = response.data.results;
-        setData(result);
+        setSearchResults(result);
+        console.log(result);
       })
       .catch(function (error) {
         console.error(error);
       });
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const loadItems = () => {
+    console.log(user);
+    APIService.getInstance()
+      .getFridgeItems(user.uid)
+      .then((items: Array<Item>) => {
+        return setLoadedItems(items);
+      });
+  };
+
+  const setItems = () => {
+    let i1 = new Item('onion', 1, null);
+    let i2 = new Item('galic', 2, null);
+
+    APIService.getInstance().setFridge(user.uid, [i1, i2]);
+  };
+
+  React.useEffect(() => {
+    loadItems();
+    // setItems();
+    console.log(searchResults);
+  }, []);
+
   return (
     <React.Fragment>
       <AppAppBar />
-      <AppForm>
-        <React.Fragment>
-          <Typography variant='h4' gutterBottom marked='center' align='center'>
-            My Fridge
-          </Typography>
-        </React.Fragment>
-        <Form
-          onSubmit={handleSearch}
-          render={({ handleSubmit: handleSearch }) => (
-            <Box
-              component='form'
-              noValidate
-              onSubmit={handleSearch}
-              sx={{ mt: 2 }}
+      <Grid container justifyContent='center' alignItems='center'>
+        <AppForm>
+          <React.Fragment>
+            <Typography
+              variant='h4'
+              gutterBottom
+              marked='center'
+              align='center'
             >
-              <Field
-                autoFocus
-                component={RFTextField}
-                fullWidth
-                label='Ingredients'
-                margin='normal'
-                name='ingredient'
-                placeholder='onion, bluberry, pork belly, etc...'
-                required
-                size='large'
-              />
-              <SearchIcon onClick={handleSearch} />
-            </Box>
-          )}
-        />
-        {data.length > 0  &&
-          data.map((item: {name: string} , i) => (
-            <Button key={i} variant='outlined'>
-              {item.name}
-            </Button>
-          ))}
-      </AppForm>
+              Search Ingredient
+            </Typography>
+          </React.Fragment>
+          <Form
+            onSubmit={handleSearch}
+            render={({ handleSubmit: handleSearch }) => (
+              <Box
+                component='form'
+                noValidate
+                onSubmit={handleSearch}
+                sx={{ mt: 2 }}
+              >
+                <Field
+                  autoFocus
+                  component={RFTextField}
+                  fullWidth
+                  label='Ingredients'
+                  margin='normal'
+                  name='ingredient'
+                  placeholder='onion, bluberry, pork belly, etc...'
+                  required
+                  size='large'
+                />
+                <SearchIcon onClick={handleSearch} />
+              </Box>
+            )}
+          />
+          <Box sx={{ flexGrow: 1 }}>
+            {searchResults.length > 0 &&
+              searchResults.map(
+                (item: { id: number; name: string; image: string }, i) => (
+                  <SearchedItem key={i} item={item} />
+                )
+              )}
+          </Box>
+        </AppForm>
+        <AppForm>
+          <React.Fragment>
+            <Typography
+              variant='h4'
+              gutterBottom
+              marked='center'
+              align='center'
+            >
+              My Fridge
+            </Typography>
+          </React.Fragment>
+          <Box sx={{ flexGrow: 1 }}>
+            {loadedItems.length > 0 &&
+              loadedItems.map((item: Item, i) => (
+                <LoadedItem key={i} item={item} />
+              ))}
+          </Box>
+        </AppForm>
+      </Grid>
       <AppFooter />
     </React.Fragment>
   );
