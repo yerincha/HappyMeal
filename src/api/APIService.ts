@@ -2,6 +2,7 @@ import { db } from '../firebase';
 import User from '../model/User';
 import { addDoc, collection, getDocs, query, where, setDoc, doc, getDoc, Timestamp } from "firebase/firestore"; 
 import Item from '../model/Item';
+import Recipe from '../model/Recipe';
 
 class APIService {
     private static instance: APIService;
@@ -66,7 +67,7 @@ class APIService {
         });
         setDoc(doc(db, "fridge", userId), {
             items: itemObjArr
-        });        
+        });
     }
 
     public getFridgeItems(userId: string): Promise<Item[]> {
@@ -87,6 +88,40 @@ class APIService {
             .finally(() => {
                 resolve(items);
             });
+        });
+    }
+
+    // Recipe
+    public getMyRecipes(userId: string): Promise<Recipe[]> {
+        return new Promise<Recipe[]>((resolve, reject) => {
+            let recipeArray: Recipe[] = [];
+
+            getDoc(doc(db, "recipe", userId))
+                .then((result) => {
+                    if (result.data()) {
+                        result.data()!!["list"].forEach((recipe: {id: string; title: string, image: string}) => {
+                            recipeArray.push(Recipe.fromObject(recipe));
+                        })
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    resolve(recipeArray);
+                });
+        });
+    }
+
+    public setMyRecipes(userId: string, recipeArray: Recipe[]) {
+        let recipeObjectArray: object[] = [];
+
+        recipeArray.forEach((recipe) => {
+            recipeObjectArray.push(recipe.toObject());
+        });
+
+        setDoc(doc(db, "recipe", userId), {
+            list: recipeObjectArray
         });
     }
 
