@@ -1,6 +1,7 @@
 import { db } from '../firebase';
 import User from '../model/User';
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore"; 
+import { addDoc, collection, getDocs, query, where, setDoc, doc, getDoc, Timestamp } from "firebase/firestore"; 
+import Item from '../model/Item';
 
 class APIService {
     private static instance: APIService;
@@ -55,6 +56,40 @@ class APIService {
                 });
         });
     }
+
+    // Fridge
+    public setFridge(userId: string, items: Item[]) {
+        let itemObjArr: object[] = [];
+
+        items.forEach((item) => {
+            itemObjArr.push(item.toObject());
+        });
+        setDoc(doc(db, "fridge", userId), {
+            items: itemObjArr
+        });        
+    }
+
+    public getFridgeItems(userId: string): Promise<Item[]> {
+        return new Promise<Item[]>((resolve, reject) => {
+            let items: Item[] = [];
+
+            getDoc(doc(db, "fridge", userId))
+            .then((result) => {
+                if (result.data()) {
+                    result.data()!!["items"].forEach((item: {name: string; quantity: number | 0; expiredAt: Timestamp | null}) => {
+                        items.push(Item.fromObject(item));
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                resolve(items);
+            });
+        });
+    }
+
 }
 
 export default APIService;
