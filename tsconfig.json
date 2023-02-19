@@ -26,7 +26,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/context/AuthContext.js",
+    "src/context/AuthContext.tsx",
     "src/AuthProvider.js",
     "cypress/e2e/pages/forgotpassword.spec.cy.js"
   ],
