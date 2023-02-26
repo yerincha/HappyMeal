@@ -57,21 +57,12 @@ function Search() {
     APIService.getInstance()
       .getFridgeItems(user.uid)
       .then((items: Array<Item>) => {
-        return setLoadedItems(items);
+        setLoadedItems(items);
       });
-  };
-
-  const setItems = () => {
-    let i1 = new Item('onion', 1, null);
-    let i2 = new Item('galic', 2, null);
-
-    APIService.getInstance().setFridge(user.uid, [i1, i2]);
   };
 
   React.useEffect(() => {
     loadItems();
-    // setItems();
-    console.log(searchResults);
   }, []);
 
   return (
@@ -117,7 +108,12 @@ function Search() {
             {searchResults.length > 0 &&
               searchResults.map(
                 (item: { id: number; name: string; image: string }, i) => (
-                  <SearchedItem key={i} item={item} />
+                  <SearchedItem
+                    key={i}
+                    item={item}
+                    loadedItems={loadedItems}
+                    loadItems={loadItems}
+                  />
                 )
               )}
           </Box>
@@ -136,7 +132,12 @@ function Search() {
           <Box sx={{ flexGrow: 1 }}>
             {loadedItems.length > 0 &&
               loadedItems.map((item: Item, i) => (
-                <LoadedItem key={i} item={item} />
+                <LoadedItem
+                  key={i}
+                  item={item}
+                  loadedItems={loadedItems}
+                  loadItems={loadItems}
+                />
               ))}
           </Box>
         </AppForm>
