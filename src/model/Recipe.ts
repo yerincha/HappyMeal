@@ -1,17 +1,17 @@
 class Recipe {
-    id: string;
+    id: number;
     title: string;
     image: string | undefined;
     isFavorite: boolean = false;
 
-    constructor(id: string, title: string, image: string, isFavorite: boolean) {
+    constructor(id: number, title: string, image: string, isFavorite: boolean) {
         this.id = id;
         this.title = title;
         this.image = image;
         this.isFavorite = isFavorite;
     }
 
-    public static fromObject(recipeObject: {id: string; title: string; image: string; isFavorite: boolean | null}) {
+    public static fromObject(recipeObject: {id: number; title: string; image: string; isFavorite: boolean | null}) {
         return new Recipe(recipeObject.id, recipeObject.title, recipeObject.image, recipeObject.isFavorite ?? false);
     }
 
