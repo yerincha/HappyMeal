@@ -77,7 +77,7 @@ class APIService {
             getDoc(doc(db, "fridge", userId))
             .then((result) => {
                 if (result.data()) {
-                    result.data()!!["items"].forEach((item: {name: string; quantity: number | 0; expiredAt: Timestamp | null}) => {
+                    result.data()!!["items"].forEach((item: {id: number; name: string; quantity: number | 0; expiredAt: Timestamp | null}) => {
                         items.push(Item.fromObject(item));
                     });
                 }
