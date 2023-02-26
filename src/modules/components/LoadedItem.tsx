@@ -1,15 +1,19 @@
-import TextField from './TextField';
-import { Grid } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Grid, Input } from '@mui/material';
+import React, { useState } from 'react';
 import Button from './Button';
 import Typography from './Typography';
 import Item from '../../model/Item';
+import APIService from '../../api/APIService';
+import { useAuth } from '../../context/AuthContext';
 
-function LoadedItem(props: { key: number; item: Item }) {
+function LoadedItem(props: {
+  key: number;
+  item: Item;
+  loadedItems: Array<Item>;
+  loadItems: () => void;
+}) {
+  const { user } = useAuth();
   const [quantity, setQuantity] = useState(props.item.quantity);
-  useEffect(() => {
-    // setQuantity(item.quantity)
-  }, []);
   const date = () => {
     const expiredDate = props.item.expiredAt?.toDate();
     return expiredDate;
@@ -17,29 +21,46 @@ function LoadedItem(props: { key: number; item: Item }) {
 
   const handleQuantityChange = (e: any) => {
     e.preventDefault();
-    setQuantity(e.target.value);
+    setQuantity(e.target.valueAsNumber);
+  };
+
+  const handleSave = () => {};
+
+  const handleDelete = () => {
+    const { item, loadedItems, loadItems } = props;
+    let newArr = [];
+    for (let i = 0; i < loadedItems.length; i++) {
+      if (loadedItems[i].name !== item.name) {
+        newArr.push(loadedItems[i]);
+      }
+      console.log(loadedItems, newArr);
+      APIService.getInstance().setFridge(user.uid, newArr);
+      loadItems();
+    }
   };
   return (
-    <Grid item container spacing={2} key={props.key}>
-      <Grid item xs={6}>
+    <Grid item container spacing={2}>
+      <Grid item xs={3}>
         <Typography align='left'>{props.item.name}</Typography>
       </Grid>
       <Grid item xs={2}>
-        <TextField
+        <Input
           size='small'
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          type='number'
           onChange={handleQuantityChange}
-        >
-          {quantity}
-        </TextField>
+          value={quantity}
+        />
       </Grid>
-      <Grid>
+      <Grid item xs={2}>
         {props.item.expiredAt === null
           ? 'N/A'
           : `${props.item.expiredAt.toDate()}`}
       </Grid>
-      <Grid>
-        <Button>Remove</Button>
+      <Grid item xs={2}>
+        <Button>Save</Button>
+      </Grid>
+      <Grid item xs={1}>
+        <Button onClick={handleDelete}>Remove</Button>
       </Grid>
     </Grid>
   );
