@@ -13,7 +13,7 @@ export default function AppForm(props: React.HTMLAttributes<HTMLDivElement>) {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <Container maxWidth="sm">
+      <Container maxWidth="lg">
         <Box sx={{ mt: 7, mb: 12 }}>
           <Paper
             background="light"
