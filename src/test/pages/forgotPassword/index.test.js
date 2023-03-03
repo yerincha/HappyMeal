@@ -58,13 +58,10 @@ test("Send Email Button is disabled and showing 'Required' error message when th
 });
 
 test("Send Email Button is disabled and showing 'Invalid email address' error message when the input field is invalid.", async () => {
-  let email;
-  let submitButton;
-  await act(() => {
-    email = screen.getByRole('textbox', {name:/email/i})
-    submitButton = screen.getByRole('button', {name:/Reset/i});   
-
-    userEvent.type(email, 'aa{tab}');
+  let email = screen.getByRole('textbox', {name:/email/i});
+  let submitButton = screen.getByRole('button', {name:/Reset/i});
+  await act(async () => {
+    await userEvent.type(email, 'aa{tab}');
   })
 
   await waitFor(() => {

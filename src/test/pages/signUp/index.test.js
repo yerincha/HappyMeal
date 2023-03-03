@@ -2,12 +2,36 @@ import React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SignUp from '../../../../pages/signup';
-import { act } from "react-dom/test-utils";
+import { act } from "@testing-library/react";
 import '@testing-library/jest-dom/extend-expect';
 import { AuthContextProvider } from '../../../context/AuthContext'
+import { useRouter } from 'next/router'
+
+jest.mock("next/router", () => ({
+  useRouter: jest.fn(),
+}));
+
+jest.mock('react-router-dom', () => {
+  return {
+    Redirect: jest.fn(({ to }) => `Redirected to ${to}`),
+  };
+});
+
+let pushMock = jest.fn();
+let replaceMock = jest.fn();
+  
 
 beforeEach(async () => {
   await act(async () => {
+    pushMock = jest.fn();
+    replaceMock = jest.fn();
+
+    useRouter.mockReturnValue({
+      push: pushMock,
+      replace: replaceMock,
+      pathname: "/",
+    });
+
     render(
       <AuthContextProvider>
         <SignUp />
@@ -32,14 +56,12 @@ test('Check if unfilled input prevents user from proceeding', async () => {
   const firstName = screen.getByRole('textbox', {name:/First Name/i});
   const lastName = screen.getByRole('textbox', {name:/Last Name/i});
   const email = screen.getByRole('textbox', {name:"Email"});
-
-  await userEvent.type(firstName, 'yerin');
-  await userEvent.type(lastName, 'cha');
-  await userEvent.type(email, 'user@test.com');
-
   const submitButton = screen.getByTestId('submitButton');
 
   await act(() => {
+    userEvent.type(firstName, 'yerin');
+    userEvent.type(lastName, 'cha');
+    userEvent.type(email, 'user@test.com');
     userEvent.click(submitButton);
   })
 
@@ -57,15 +79,13 @@ test('Check if redirection after successful signup is handled', async () => {
   const lastName = screen.getByRole('textbox', {name:/Last Name/i});
   const email = screen.getByRole('textbox', {name:"Email"});
   const password = screen.getByLabelText(/password/i);
-
-  await userEvent.type(firstName, 'yerin');
-  await userEvent.type(lastName, 'cha');
-  await userEvent.type(email, 'user@test.com');
-  await userEvent.type(password, '123456789*');
-
   const submitButton = screen.getByTestId('submitButton');
 
   await act(() => {
+    userEvent.type(firstName, 'yerin');
+    userEvent.type(lastName, 'cha');
+    userEvent.type(email, 'user@test.com');
+    userEvent.type(password, '123456789*');
     userEvent.click(submitButton);
   })
 
