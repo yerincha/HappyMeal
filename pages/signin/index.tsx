@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../src/context/AuthContext';
-import Router from 'next/router';
+import { useRouter } from "next/router";
 import { Field, Form, FormSpy } from 'react-final-form';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -18,6 +18,7 @@ import FormFeedback from '../../src/modules/form/FormFeedback';
 import withRoot from '../../src/modules/withRoot';
 
 function SignIn() {
+  const router = useRouter()
   const [sent, setSent] = useState(false);
   const [open, setOpen] = useState(false);
   const { signin } = useAuth();
@@ -42,7 +43,7 @@ function SignIn() {
   const handleSubmit = (values: { email: string; password: string; }) => {
     signin(values.email, values.password)
       .then(() => {
-        Router.push('/')
+        router.push('/')
       })
       .catch((error: { code: string; message: string; }) => {
         if(error.code !== 'auth/missing-email') {

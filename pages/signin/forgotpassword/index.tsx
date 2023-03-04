@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Router from 'next/router';
+import { useRouter } from "next/router";
 import { Field, Form, FormSpy } from 'react-final-form';
 import Box from '@mui/material/Box';
 import Typography from '../../../src/modules/components/Typography';
@@ -14,6 +14,8 @@ import FormFeedback from '../../../src/modules/form/FormFeedback';
 import withRoot from '../../../src/modules/withRoot';
 
 function ForgotPassword() {
+  const router = useRouter()
+
   const [sent, setSent] = React.useState(false);
   const [disable, setDisable] = React.useState(true);
   const validate = (values: { [index: string]: string }) => {
@@ -36,7 +38,7 @@ function ForgotPassword() {
 
   const handleSubmit = () => {
     setSent(true);
-    Router.replace('/signin');
+    router.replace('/signin');
   };
 
   return (
