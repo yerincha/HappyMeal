@@ -22,7 +22,6 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<Boolean>(true);
-  console.log(user);
 
   const signup = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -37,7 +36,11 @@ export const AuthContextProvider = ({
     await signOut(auth);
   };
 
-  const updateUserProfile = (user: User, firstname:string, lastname: string) => {
+  const updateUserProfile = (
+    user: User,
+    firstname: string,
+    lastname: string
+  ) => {
     return updateProfile(user, {
       displayName: `${firstname} ${lastname}`,
     });
@@ -63,7 +66,9 @@ export const AuthContextProvider = ({
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signin, signout, signup, updateUserProfile }}>
+    <AuthContext.Provider
+      value={{ user, signin, signout, signup, updateUserProfile }}
+    >
       {loading ? null : children}
     </AuthContext.Provider>
   );
