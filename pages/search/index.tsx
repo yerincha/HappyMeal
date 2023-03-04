@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import React, { useState } from 'react';
-import { Field, Form, FormSpy } from 'react-final-form';
+import { Field, Form } from 'react-final-form';
 import AppAppBar from '../../src/modules/views/AppAppBar';
 import AppFooter from '../../src/modules/views/AppFooter';
 import AppForm from '../../src/modules/views/AppForm';
@@ -17,12 +16,15 @@ import { useAuth } from '../../src/context/AuthContext';
 import Item from '../../src/model/Item';
 import SearchedItem from '../../src/modules/components/SearchedItem';
 import LoadedItem from '../../src/modules/components/LoadedItem';
-import { Timestamp } from 'firebase/firestore';
+
+
 
 function Search() {
   const { user } = useAuth();
   const [searchResults, setSearchResults] = useState([]);
-  const [loadedItems, setLoadedItems] = useState(new Array<Item>());
+  // const [loadedItems, setLoadedItems] = useState(new Array<Item>());
+  const [loadedItems, setLoadedItems] = useState(new Map<number, Item>());
+
   const [selected, setSelected] = useState();
 
   const handleSearch = (values: { ingredient: string }) => {
@@ -53,11 +55,14 @@ function Search() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadItems = () => {
-    console.log(user);
     APIService.getInstance()
       .getFridgeItems(user.uid)
       .then((items: Array<Item>) => {
-        setLoadedItems(items);
+        let map = new Map<number, Item>();
+        items.forEach((item) => {
+          map.set(item.id, item);
+        })
+        setLoadedItems(map);
       });
   };
 
@@ -87,7 +92,7 @@ function Search() {
                 component='form'
                 noValidate
                 onSubmit={handleSearch}
-                sx={{ mt: 2 }}
+                sx={{ mt: 1 }}
               >
                 <Field
                   autoFocus
@@ -98,7 +103,7 @@ function Search() {
                   name='ingredient'
                   placeholder='onion, bluberry, pork belly, etc...'
                   required
-                  size='large'
+                  size='small'
                 />
                 <SearchIcon onClick={handleSearch} />
               </Box>
@@ -130,8 +135,8 @@ function Search() {
             </Typography>
           </React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
-            {loadedItems.length > 0 &&
-              loadedItems.map((item: Item, i) => (
+            {loadedItems.size > 0 &&
+              Array.from(loadedItems.values()).map((item: Item, i) => (
                 <LoadedItem
                   key={i}
                   item={item}
