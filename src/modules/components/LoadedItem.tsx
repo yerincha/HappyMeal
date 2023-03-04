@@ -9,7 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 function LoadedItem(props: {
   key: number;
   item: Item;
-  loadedItems: Array<Item>;
+  loadedItems: Map<number, Item>;
   loadItems: () => void;
 }) {
   const { user } = useAuth();
@@ -21,23 +21,22 @@ function LoadedItem(props: {
 
   const handleQuantityChange = (e: any) => {
     e.preventDefault();
-    setQuantity(e.target.valueAsNumber);
+    if(isNaN(e.target.valueAsNumber)) {
+      setQuantity(0);
+    } else {
+      setQuantity(e.target.valueAsNumber);
+    }
   };
 
   const handleSave = () => {};
 
   const handleDelete = () => {
     const { item, loadedItems, loadItems } = props;
-    let newArr = [];
-    for (let i = 0; i < loadedItems.length; i++) {
-      if (loadedItems[i].name !== item.name) {
-        newArr.push(loadedItems[i]);
-      }
-      console.log(loadedItems, newArr);
-      APIService.getInstance().setFridge(user.uid, newArr);
-      loadItems();
-    }
+    loadedItems.delete(item.id);
+    APIService.getInstance().setFridge(user.uid, Array.from(loadedItems.values()));
+    loadItems();
   };
+
   return (
     <Grid item container spacing={2}>
       <Grid item xs={3}>
@@ -54,7 +53,7 @@ function LoadedItem(props: {
       <Grid item xs={2}>
         {props.item.expiredAt === null
           ? 'N/A'
-          : `${props.item.expiredAt.toDate()}`}
+          : `${props.item.expiredAt.toDate().toDateString()}`}
       </Grid>
       <Grid item xs={2}>
         <Button>Save</Button>
