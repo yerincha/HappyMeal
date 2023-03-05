@@ -21,25 +21,36 @@ function LoadedItem(props: {
 
   const handleQuantityChange = (e: any) => {
     e.preventDefault();
-    if(isNaN(e.target.valueAsNumber)) {
+    if (isNaN(e.target.valueAsNumber)) {
       setQuantity(0);
     } else {
       setQuantity(e.target.valueAsNumber);
     }
   };
 
-  const handleSave = () => {};
+  const handleSave = () => {
+    const { item, loadedItems } = props;
+    item.quantity = quantity;
+    loadedItems.set(item.id, item);
+    APIService.getInstance().setFridge(
+      user.uid,
+      Array.from(loadedItems.values())
+    );
+  };
 
   const handleDelete = () => {
     const { item, loadedItems, loadItems } = props;
     loadedItems.delete(item.id);
-    APIService.getInstance().setFridge(user.uid, Array.from(loadedItems.values()));
+    APIService.getInstance().setFridge(
+      user.uid,
+      Array.from(loadedItems.values())
+    );
     loadItems();
   };
 
   return (
-    <Grid item container spacing={2}>
-      <Grid item xs={3}>
+    <Grid item container sx={{ p: 0 }} spacing={2}>
+      <Grid item xs={3} sx={{ p: 0 }}>
         <Typography align='left'>{props.item.name}</Typography>
       </Grid>
       <Grid item xs={2}>
@@ -56,7 +67,7 @@ function LoadedItem(props: {
           : `${props.item.expiredAt.toDate().toDateString()}`}
       </Grid>
       <Grid item xs={2}>
-        <Button>Save</Button>
+        <Button onClick={handleSave}>Save</Button>
       </Grid>
       <Grid item xs={1}>
         <Button onClick={handleDelete}>Remove</Button>

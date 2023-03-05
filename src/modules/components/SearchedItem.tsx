@@ -25,18 +25,17 @@ function SearchedItem(props: {
   const handleAddList = () => {
     const { item, loadedItems, loadItems } = props;
     let newItem = new Item(item.id, item.name, quantity, expiredAt);
-    console.log(item.name, loadedItems)
     loadedItems.set(item.id, newItem)
     APIService.getInstance().setFridge(user.uid, Array.from(loadedItems.values()));
     loadItems();
   };
 
   return (
-    <Grid item container spacing={{xs:2, md:10}}>
-      <Grid item xs={4} md={3}>
+    <Grid item container spacing={1}>
+      <Grid item xs={3} >
         <Typography align='left'>{props.item.name}</Typography>
       </Grid>
-      <Grid item xs={2} >
+      <Grid item xs={1} >
         <Input
           size='small'
           type='number'
@@ -44,15 +43,15 @@ function SearchedItem(props: {
           value={quantity}
         />
       </Grid>
-      <Grid item xs={2} md={3}>
+      <Grid item xs={3}>
         <DatePicker
           selected={expiredAt.toDate()}
           onChange={(date: Date) => setExpiredAt(Timestamp.fromDate(date))}
         />
       </Grid>
-      <Grid item xs={4} md={4} onClick={handleAddList}>
-        Add to list {props.item.name}
-      </Grid>
+      <Button item onClick={handleAddList}>
+        Add to list
+      </Button>
     </Grid>
   );
 }

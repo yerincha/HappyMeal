@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
 import Typography from './Typography';
 import axios from 'axios';
@@ -12,8 +12,8 @@ export default function CardGrid(props: {
   loadedRecipes: Array<Recipe>;
 }) {
   const { user } = useAuth();
-  const [url, setUrl] = useState('');
-  const getDetails = () => {
+
+  const handleDetailClick = () => {
     const options = {
       method: 'GET',
       url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${props.tile.id}/information`,
@@ -27,17 +27,11 @@ export default function CardGrid(props: {
     return axios
       .request(options)
       .then((response) => {
-        setUrl(response.data.sourceUrl);
+        window.open(response.data.sourceUrl);
       })
       .catch(function (error) {
         console.error(error);
       });
-  };
-
-  const handleDetailClick = () => {
-    getDetails().then(() => {
-      window.open(url);
-    });
   };
 
   const handleAddClick = () => {
@@ -64,7 +58,7 @@ export default function CardGrid(props: {
           <Typography gutterBottom variant='body2' component='h2' noWrap>
             {props.tile.title}
           </Typography>
-          <Typography> Add to My List</Typography>
+          <Typography onClick={handleAddClick}> Add to My List</Typography>
           <Typography onClick={handleDetailClick}>See details</Typography>
         </CardContent>
       </CardActionArea>
