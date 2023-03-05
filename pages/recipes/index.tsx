@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import AppAppBar from '../../src/modules/views/AppAppBar';
@@ -20,7 +21,9 @@ import Recipe from '../../src/model/Recipe';
 function SearchRecipe() {
   const { user } = useAuth();
   const [searchResults, setSearchResults] = useState(new Array<Recipe>());
-  const [loadedIngredientItems, setLoadedIngredientItems] = useState(new Array<Item>());
+  const [loadedIngredientItems, setLoadedIngredientItems] = useState(
+    new Array<Item>()
+  );
   const [myFridgeItems, setMyFridgeItems] = useState('');
   const [loadedRecipes, setLoadedRecipes] = useState(new Array<Recipe>());
 
@@ -69,6 +72,7 @@ function SearchRecipe() {
           }
         }
         setMyFridgeItems(items);
+        handleSearch({ query: items });
       });
     }
     handleSearch({ query: myFridgeItems });
@@ -84,13 +88,12 @@ function SearchRecipe() {
 
   const fetchMyRecipes = () => {
     APIService.getInstance()
-    .getMyRecipes(user.uid)
-    .then((recipes: Array<Recipe>) => {
-      setLoadedRecipes(recipes);
-    })
-  }
+      .getMyRecipes(user.uid)
+      .then((recipes: Array<Recipe>) => {
+        setLoadedRecipes(recipes);
+      });
+  };
 
-  
   React.useEffect(() => {
     let items = '';
     loadIngredientItems().then(() => {
@@ -104,8 +107,6 @@ function SearchRecipe() {
       setMyFridgeItems(items);
       fetchMyRecipes();
     });
-
-    
   }, []);
 
   return (
@@ -132,30 +133,38 @@ function SearchRecipe() {
                 onSubmit={handleSearch}
                 sx={{ mt: 2 }}
               >
-                <Field
-                  autoFocus
-                  component={RFTextField}
-                  fullWidth
-                  label='Search recipes with ingredients'
-                  margin='normal'
-                  name='query'
-                  placeholder={
-                    myFridgeItems.length > 0
-                      ? myFridgeItems
-                      : 'onion, ground beef, carrot, etc'
-                  }
-                  required
-                  size='large'
-                />
-                <SearchIcon onClick={handleSearch} />
-                <Button onClick={handleDefaultSearch}>
-                  Search with my fridge items
-                </Button>
+                <Grid container>
+                  <Grid item xs={11}>
+                    <Field
+                      autoFocus
+                      component={RFTextField}
+                      fullWidth
+                      label='Search recipes with ingredients'
+                      margin='normal'
+                      name='query'
+                      placeholder={
+                        myFridgeItems.length > 0
+                          ? myFridgeItems
+                          : 'onion, ground beef, carrot, etc'
+                      }
+                      required
+                      size='large'
+                    />
+                  </Grid>
+                  <Grid item sx={{ p: 2, mt: 4 }}>
+                    <SearchIcon onClick={handleSearch} />
+                  </Grid>
+                </Grid>
+                <Box sx={{ ml: 90, mb: 5 }}>
+                  <Button onClick={handleDefaultSearch}>
+                    Search with my fridge items
+                  </Button>
+                </Box>
               </Box>
             )}
           />
           <Box sx={{ flexGrow: 1 }}>
-            <CardGrid data={searchResults} loadedRecipes={loadedRecipes}/>
+            <CardGrid data={searchResults} loadedRecipes={loadedRecipes} />
           </Box>
         </AppForm>
       </Grid>
