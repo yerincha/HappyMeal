@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { Field, Form } from 'react-final-form';
 import AppAppBar from '../../src/modules/views/AppAppBar';
 import AppFooter from '../../src/modules/views/AppFooter';
 import AppForm from '../../src/modules/views/AppForm';
@@ -7,29 +7,20 @@ import Box from '@mui/material/Box';
 import Typography from '../../src/modules/components/Typography';
 import withRoot from '../../src/modules/withRoot';
 import { Grid } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import RFTextField from '../../src/modules/form/RFTextField';
-import { API_KEY } from '../../src/credentials';
-import axios from 'axios';
 import APIService from '../../src/api/APIService';
 import { useAuth } from '../../src/context/AuthContext';
 import Recipe from '../../src/model/Recipe';
-import SearchedItem from '../../src/modules/components/SearchedItem';
-import LoadedItem from '../../src/modules/components/LoadedItem';
-import { Timestamp } from 'firebase/firestore';
 import CardGrid from '../../src/modules/components/CardGrid';
 
 function RecipeCollection() {
   const { user } = useAuth();
-  const [loadedItems, setLoadedItems] = useState(new Array<Recipe>());
-  const [selected, setSelected] = useState();
+  const [loadedRecipes, setLoadedRecipes] = useState(new Array<Recipe>());
 
   const loadItems = () => {
     APIService.getInstance()
       .getMyRecipes(user.uid)
-      .then((items: Array<Recipe>) => {
-        setLoadedItems(items);
-        console.log(items)
+      .then((recipes: Array<Recipe>) => {
+        setLoadedRecipes(recipes);
       });
   };
 
@@ -49,19 +40,11 @@ function RecipeCollection() {
               marked='center'
               align='center'
             >
-              My Fridge
+              My Recipes
             </Typography>
           </React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
-            {loadedItems.length > 0 &&
-              loadedItems.map((item: Recipe, i) => (
-                <LoadedItem
-                  key={i}
-                  item={item}
-                  loadedItems={loadedItems}
-                  loadItems={loadItems}
-                />
-              ))}
+            <CardGrid data={loadedRecipes} loadedRecipes={loadedRecipes} />
           </Box>
         </AppForm>
       </Grid>
