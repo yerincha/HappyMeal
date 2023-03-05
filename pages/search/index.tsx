@@ -83,7 +83,7 @@ function Search() {
                 sx={{ mt: 1 }}
               >
                 <Grid container>
-                  <Grid item xs={10}>
+                  <Grid item xs={11}>
                     <Field
                       autoFocus
                       component={RFTextField}
@@ -96,14 +96,14 @@ function Search() {
                       size='small'
                     />
                   </Grid>
-                  <Grid item sx={{m:5}}>
-                    <SearchIcon onClick={handleSearch} />
+                  <Grid item sx={{mt:5, ml:1}}>
+                    <SearchIcon onClick={handleSearch} data-testid='search'/>
                   </Grid>
                 </Grid>
               </Box>
             )}
           />
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1 }} data-testid='searchedResults'>
             {searchResults.length > 0 &&
               searchResults.map(
                 (item: { id: number; name: string; image: string }, i) => (

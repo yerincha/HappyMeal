@@ -34,7 +34,8 @@ export default function CardGrid(props: {
       });
   };
 
-  const handleAddClick = () => {
+  const handleAddClick = (event: Event) => {
+    event.stopPropagation();
     const { loadedRecipes, tile } = props;
     for (let i = 0; i < loadedRecipes.length; i++) {
       if (loadedRecipes[i].id === tile.id) {
@@ -45,7 +46,7 @@ export default function CardGrid(props: {
   };
 
   return (
-    <Card sx={{ width: 500 }}>
+    <Card sx={{ width: 500 }} onClick={handleDetailClick}>
       <CardActionArea>
         <CardMedia
           component='img'
@@ -59,7 +60,6 @@ export default function CardGrid(props: {
             {props.tile.title}
           </Typography>
           <Typography onClick={handleAddClick}> Add to My List</Typography>
-          <Typography onClick={handleDetailClick}>See details</Typography>
         </CardContent>
       </CardActionArea>
     </Card>

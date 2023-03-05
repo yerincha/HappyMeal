@@ -33,3 +33,5 @@ yarn-error.log*
 
 src/firebase.js
 src/credentials.js
+
+.nyc_output
