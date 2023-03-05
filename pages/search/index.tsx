@@ -17,15 +17,10 @@ import Item from '../../src/model/Item';
 import SearchedItem from '../../src/modules/components/SearchedItem';
 import LoadedItem from '../../src/modules/components/LoadedItem';
 
-
-
 function Search() {
   const { user } = useAuth();
   const [searchResults, setSearchResults] = useState([]);
-  // const [loadedItems, setLoadedItems] = useState(new Array<Item>());
   const [loadedItems, setLoadedItems] = useState(new Map<number, Item>());
-
-  const [selected, setSelected] = useState();
 
   const handleSearch = (values: { ingredient: string }) => {
     const options = {
@@ -53,7 +48,6 @@ function Search() {
       });
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadItems = () => {
     APIService.getInstance()
       .getFridgeItems(user.uid)
@@ -61,13 +55,14 @@ function Search() {
         let map = new Map<number, Item>();
         items.forEach((item) => {
           map.set(item.id, item);
-        })
+        });
         setLoadedItems(map);
       });
   };
 
   React.useEffect(() => {
     loadItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -75,16 +70,9 @@ function Search() {
       <AppAppBar />
       <Grid container justifyContent='center' alignItems='center'>
         <AppForm>
-          <React.Fragment>
-            <Typography
-              variant='h4'
-              gutterBottom
-              marked='center'
-              align='center'
-            >
-              Search Ingredient
-            </Typography>
-          </React.Fragment>
+          <Typography variant='h4' gutterBottom marked='center' align='center'>
+            Search Ingredient
+          </Typography>
           <Form
             onSubmit={handleSearch}
             render={({ handleSubmit: handleSearch }) => (
@@ -94,18 +82,24 @@ function Search() {
                 onSubmit={handleSearch}
                 sx={{ mt: 1 }}
               >
-                <Field
-                  autoFocus
-                  component={RFTextField}
-                  fullWidth
-                  label='Ingredients'
-                  margin='normal'
-                  name='ingredient'
-                  placeholder='onion, bluberry, pork belly, etc...'
-                  required
-                  size='small'
-                />
-                <SearchIcon onClick={handleSearch} />
+                <Grid container>
+                  <Grid item xs={10}>
+                    <Field
+                      autoFocus
+                      component={RFTextField}
+                      fullWidth
+                      label='Ingredients'
+                      margin='normal'
+                      name='ingredient'
+                      placeholder='onion, blueberry, pork belly, etc...'
+                      required
+                      size='small'
+                    />
+                  </Grid>
+                  <Grid item sx={{m:5}}>
+                    <SearchIcon onClick={handleSearch} />
+                  </Grid>
+                </Grid>
               </Box>
             )}
           />
@@ -122,18 +116,9 @@ function Search() {
                 )
               )}
           </Box>
-        </AppForm>
-        <AppForm>
-          <React.Fragment>
-            <Typography
-              variant='h4'
-              gutterBottom
-              marked='center'
-              align='center'
-            >
-              My Fridge
-            </Typography>
-          </React.Fragment>
+          <Typography variant='h4' gutterBottom marked='center' align='center'>
+            My Fridge
+          </Typography>
           <Box sx={{ flexGrow: 1 }}>
             {loadedItems.size > 0 &&
               Array.from(loadedItems.values()).map((item: Item, i) => (
