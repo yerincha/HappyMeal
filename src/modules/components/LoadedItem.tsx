@@ -49,12 +49,13 @@ function LoadedItem(props: {
   };
 
   return (
-    <Grid item container sx={{ p: 0 }} spacing={2}>
+    <Grid item container sx={{ p: 0 }} spacing={2} data-testid='myItem'>
       <Grid item xs={3} sx={{ p: 0 }}>
         <Typography align='left'>{props.item.name}</Typography>
       </Grid>
       <Grid item xs={2}>
         <Input
+          data-testid='quantityInput'
           size='small'
           type='number'
           onChange={handleQuantityChange}
@@ -67,10 +68,10 @@ function LoadedItem(props: {
           : `${props.item.expiredAt.toDate().toDateString()}`}
       </Grid>
       <Grid item xs={2}>
-        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={handleSave} data-testid='saveButton'>Save</Button>
       </Grid>
       <Grid item xs={1}>
-        <Button onClick={handleDelete}>Remove</Button>
+        <Button onClick={handleDelete} data-testid='removeButton'>Remove</Button>
       </Grid>
     </Grid>
   );

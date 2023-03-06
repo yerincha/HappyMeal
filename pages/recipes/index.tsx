@@ -21,9 +21,6 @@ import Recipe from '../../src/model/Recipe';
 function SearchRecipe() {
   const { user } = useAuth();
   const [searchResults, setSearchResults] = useState(new Array<Recipe>());
-  const [loadedIngredientItems, setLoadedIngredientItems] = useState(
-    new Array<Item>()
-  );
   const [myFridgeItems, setMyFridgeItems] = useState('');
   const [loadedRecipes, setLoadedRecipes] = useState(new Array<Recipe>());
 
@@ -62,28 +59,23 @@ function SearchRecipe() {
 
   const handleDefaultSearch = () => {
     if (myFridgeItems.length === 0) {
-      let items = '';
-      loadIngredientItems().then(() => {
-        for (let i = 0; i < loadedIngredientItems.length; i++) {
-          if (i !== loadedIngredientItems.length - 1) {
-            items += loadedIngredientItems[i].name + ', ';
-          } else {
-            items += loadedIngredientItems[i].name;
+      let itemNames = '';
+
+      APIService.getInstance()
+        .getFridgeItems(user.uid)
+        .then((items: Array<Item>) => {
+          for (let i = 0; i < items.length; i++) {
+            if (i !== items.length - 1) {
+              itemNames += items[i].name + ', ';
+            } else {
+              itemNames += items[i].name;
+            }
           }
-        }
-        setMyFridgeItems(items);
-        handleSearch({ query: items });
-      });
+          setMyFridgeItems(itemNames);
+          handleSearch({ query: itemNames });
+        })
     }
     handleSearch({ query: myFridgeItems });
-  };
-
-  const loadIngredientItems = () => {
-    return APIService.getInstance()
-      .getFridgeItems(user.uid)
-      .then((items: Array<Item>) => {
-        setLoadedIngredientItems(items);
-      });
   };
 
   const fetchMyRecipes = () => {
@@ -95,16 +87,18 @@ function SearchRecipe() {
   };
 
   React.useEffect(() => {
-    let items = '';
-    loadIngredientItems().then(() => {
-      for (let i = 0; i < loadedIngredientItems.length; i++) {
-        if (i !== loadedIngredientItems.length - 1) {
-          items += loadedIngredientItems[i].name + ', ';
+    let itemNames = '';
+    APIService.getInstance()
+    .getFridgeItems(user.uid)
+    .then((items: Array<Item>) => {
+      for (let i = 0; i < items.length; i++) {
+        if (i !== items.length - 1) {
+          itemNames += items[i].name + ', ';
         } else {
-          items += loadedIngredientItems[i].name;
+          itemNames += items[i].name;
         }
       }
-      setMyFridgeItems(items);
+      setMyFridgeItems(itemNames);
       fetchMyRecipes();
     });
   }, []);
@@ -156,7 +150,7 @@ function SearchRecipe() {
                   </Grid>
                 </Grid>
                 <Box sx={{ ml: 90, mb: 5 }}>
-                  <Button onClick={handleDefaultSearch}>
+                  <Button onClick={handleDefaultSearch} data-testid='searchRecipeWithMyFridge'>
                     Search with my fridge items
                   </Button>
                 </Box>

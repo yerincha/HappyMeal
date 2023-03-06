@@ -5,7 +5,7 @@ import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
 const backgroundImage =
-  "https://img.freepik.com/free-photo/epilepsy-awareness-symbol-pink-backdrop_23-2147863550.jpg?t=st=1673123006~exp=1673123606~hmac=7ac9ce50295084c118a39a06165624d0a42e34b9e19767a2ba3d7303341d7311";
+  "https://img.freepik.com/free-photo/top-view-tasty-batch-food-cooked-arrangement_23-2148765563.jpg?t=st=1678045518~exp=1678046118~hmac=446f50bcf6101ee8ee707606a0a32c24cdfaa113679277fafa04a35e7eb5187a";
 
 export default function ProductHero() {
   return (
@@ -25,7 +25,7 @@ export default function ProductHero() {
         variant="h5"
         sx={{ mb: 4, mt: { sx: 4, sm: 10 } }}
       >
-        Symptom log and Discover Prossible Diseases Program
+        Find your meal prep solution with your ingredients!
       </Typography>
       <Button
         color="secondary"
@@ -38,7 +38,7 @@ export default function ProductHero() {
         Sign up
       </Button>
       <Typography variant="body2" color="inherit" sx={{ mt: 2 }}>
-        Help health management
+        Easy and Yummy Recipes
       </Typography>
     </ProductHeroLayout>
   );

@@ -46,7 +46,7 @@ export default function CardGrid(props: {
   };
 
   return (
-    <Card sx={{ width: 500 }} onClick={handleDetailClick}>
+    <Card sx={{ width: 500 }} onClick={handleDetailClick} data-testid='recipeItemCard'>
       <CardActionArea>
         <CardMedia
           component='img'
@@ -56,10 +56,10 @@ export default function CardGrid(props: {
           title='Contemplative Reptile'
         />
         <CardContent>
-          <Typography gutterBottom variant='body2' component='h2' noWrap>
+          <Typography gutterBottom variant='body2' component='h2' noWrap data-testid='recipeTitle'>
             {props.tile.title}
           </Typography>
-          <Typography onClick={handleAddClick}> Add to My List</Typography>
+          <Typography onClick={handleAddClick} data-testid='addRecipeButton'> Add to My List</Typography>
         </CardContent>
       </CardActionArea>
     </Card>

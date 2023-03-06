@@ -23,7 +23,6 @@ before(() => {
   cy.get("[name='password']").type(validPassword);
   cy.get(getElementByType(SUBMIT)).click();
   cy.url().should(includeString, HOME_URL);
-
 });
 
 describe('/search', () => {
@@ -36,30 +35,95 @@ describe('/search', () => {
     cy.get("[data-testid='searchedResults']").find("[data-testid='searchedItem']").should('have.length', 10);
   });
   
-  xit('Add to My Fridge list when click Add to List button', () => {
-    visitSearch();
-    cy.url().should(includeString, SEARCH_URL)
-    cy.get("[data-testid='searchedItem']").contains('onion powder');
-    cy.get("[data-testid='search']").click();
-    cy.get("[data-testid='searchedResults']").contains('onion');
-
-  });
-
-  xit('Update quantity from searched list', () => {
+  it('Add to My Fridge list when click Add to List button', () => {
     visitSearch();
     cy.url().should(includeString, SEARCH_URL)
     cy.get("[name='ingredient']").type('onion');
     cy.get("[data-testid='search']").click();
-    cy.get("[data-testid='searchedResults']").contains('onion');
-    cy.get("[data-testid='quantity']".type(2))
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+      visitSearch();
+      cy.get("[data-testid='myItem']").contains('onion');
+      cy.get("[data-testid='removeButton']").click().wait(1000);
+    });
   });
 
+  it('Do not add to My Fridge list when click Add to List button which is already in my fridge', () => {
+    visitSearch();
+    cy.url().should(includeString, SEARCH_URL)
+    cy.get("[name='ingredient']").type('onion');
+    cy.get("[data-testid='search']").click();
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+      visitSearch();
+      cy.get("[data-testid='myItem']").contains('onion');
 
-  xit('Remove ingredient from My Fridge list', () => {
+      cy.get("[name='ingredient']").type('onion');
+      cy.get("[data-testid='search']").click();
+      cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+        cy.get("[data-testid='myItem']").should('have.length', 1);
+        cy.get("[data-testid='removeButton']").click();
+      });
+    });
   });
 
-  xit('Update quantity from My Fridge list', () => {
+  it('Update quantity from searched list and add to my fridge list', () => {
+    visitSearch();
+    cy.url().should(includeString, SEARCH_URL)
+    cy.get("[name='ingredient']").type('onion');
+    cy.get("[data-testid='search']").click().wait(1000);
 
+    cy.get("[data-testid='searchedResults']").children().first().find("input").first().clear();
+    cy.get("[data-testid='searchedResults']").children().first().find("input").first().type(2);
+
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+      visitSearch();
+      cy.get("[data-testid='myItem']").contains('onion');
+      cy.get("[data-testid='myItem']").contains('2');
+    });
+  });
+
+  it('Update expiration from searched list and add to my fridge list', () => {
+    visitSearch();
+    cy.url().should(includeString, SEARCH_URL)
+    cy.get("[name='ingredient']").type('onion');
+    cy.get("[data-testid='search']").click().wait(1000);
+
+    cy.get("[data-testid='searchedResults']").children().first().find("input").eq(1).type('{backspace}4');
+
+    cy.get("body").click(0,0);
+
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+      visitSearch();
+      cy.get("[data-testid='myItem']").contains('2024');
+      cy.get("[data-testid='removeButton']").click();
+    });
+  });
+
+  it('Remove ingredient from My Fridge list', () => {
+    visitSearch();
+    cy.url().should(includeString, SEARCH_URL)
+    cy.get("[data-testid='myItem']").contains('onion');
+    cy.get("[data-testid='removeButton']").click().wait(1000).then(() => {
+      visitSearch();
+      cy.get("[data-testid='myItem']").should('not.exist');
+    });
+  });
+
+  it('Update quantity from My Fridge list', () => {
+    visitSearch();
+    cy.url().should(includeString, SEARCH_URL)
+    cy.get("[name='ingredient']").type('onion');
+    cy.get("[data-testid='search']").click();
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+      visitSearch();
+      cy.get("[data-testid='myItem']").contains('onion');
+      cy.get("[data-testid='quantityInput']").clear();
+      cy.get("[data-testid='quantityInput']").type(2);
+      cy.get("[data-testid='saveButton']").click().wait(1000).then(() => {
+        visitSearch();
+        cy.get("[data-testid='myItem']").contains('20');
+        cy.get("[data-testid='removeButton']").click();
+      });
+    });
   });
 
   xit('Update expiration date from My Fridge List', async () => {
