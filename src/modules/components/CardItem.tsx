@@ -9,7 +9,7 @@ import Recipe from '../../model/Recipe';
 
 export default function CardGrid(props: {
   tile: Recipe;
-  loadedRecipes: Array<Recipe>;
+  loadedRecipes: Map<number, Recipe>;
 }) {
   const { user } = useAuth();
 
@@ -37,16 +37,28 @@ export default function CardGrid(props: {
   const handleAddClick = (event: Event) => {
     event.stopPropagation();
     const { loadedRecipes, tile } = props;
-    for (let i = 0; i < loadedRecipes.length; i++) {
-      if (loadedRecipes[i].id === tile.id) {
-        return;
-      }
+    if (loadedRecipes.has(tile.id)) {
+      return;
     }
-    APIService.getInstance().setMyRecipes(user.uid, [...loadedRecipes, tile]);
+    loadedRecipes.set(tile.id, tile);
+    APIService.getInstance().setMyRecipes(
+      user.uid,
+      Array.from(loadedRecipes.values())
+    );
+    alert('Saved!');
+  };
+
+  const handleDelete = () => {
+    const { loadedRecipes, tile } = props;
+    loadedRecipes.delete(tile.id);
+    APIService.getInstance().setMyRecipes(
+      user.uid,
+      Array.from(loadedRecipes.values())
+    );
   };
 
   return (
-    <Card sx={{ width: 500 }} onClick={handleDetailClick} data-testid='recipeItemCard'>
+    <Card sx={{ width: 500 }} data-testid='recipeItemCard'>
       <CardActionArea>
         <CardMedia
           component='img'
@@ -54,12 +66,23 @@ export default function CardGrid(props: {
           sx={{ height: 200 }}
           image={props.tile.image}
           title='Contemplative Reptile'
+          onClick={handleDetailClick}
         />
         <CardContent>
-          <Typography gutterBottom variant='body2' component='h2' noWrap data-testid='recipeTitle'>
+          <Typography
+            gutterBottom
+            variant='body2'
+            component='h2'
+            noWrap
+            data-testid='recipeTitle'
+            onClick={handleDetailClick}
+          >
             {props.tile.title}
           </Typography>
-          <Typography onClick={handleAddClick} data-testid='addRecipeButton'> Add to My List</Typography>
+          <Typography onClick={handleAddClick} data-testid='addRecipeButton'>
+            {' '}
+            Add to My List
+          </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
