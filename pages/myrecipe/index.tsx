@@ -14,13 +14,17 @@ import CardGrid from '../../src/modules/components/CardGrid';
 
 function RecipeCollection() {
   const { user } = useAuth();
-  const [loadedRecipes, setLoadedRecipes] = useState(new Array<Recipe>());
+  const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
 
   const loadItems = () => {
     APIService.getInstance()
       .getMyRecipes(user.uid)
       .then((recipes: Array<Recipe>) => {
-        setLoadedRecipes(recipes);
+        let map = new Map<number, Recipe>();
+        recipes.forEach((item) => {
+          map.set(item.id, item);
+        });
+        setLoadedRecipes(map);
       });
   };
 
