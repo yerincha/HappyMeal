@@ -10,7 +10,7 @@ import { Grid } from '@mui/material';
 import APIService from '../../src/api/APIService';
 import { useAuth } from '../../src/context/AuthContext';
 import Recipe from '../../src/model/Recipe';
-import CardGrid from '../../src/modules/components/CardGrid';
+import CollectionCardGrid from '../../src/modules/components/CollectionCardGrid';
 
 function RecipeCollection() {
   const { user } = useAuth();
@@ -48,7 +48,7 @@ function RecipeCollection() {
             </Typography>
           </React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
-            <CardGrid data={loadedRecipes} loadedRecipes={loadedRecipes} />
+            <CollectionCardGrid loadedRecipes={loadedRecipes} loadItems={loadItems}/>
           </Box>
         </AppForm>
       </Grid>
