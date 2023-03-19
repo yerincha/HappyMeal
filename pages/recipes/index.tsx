@@ -22,7 +22,7 @@ function SearchRecipe() {
   const { user } = useAuth();
   const [searchResults, setSearchResults] = useState(new Array<Recipe>());
   const [myFridgeItems, setMyFridgeItems] = useState('');
-  const [loadedRecipes, setLoadedRecipes] = useState(new Array<Recipe>());
+  const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
 
   const handleSearch = (values: { query: string }) => {
     const options = {
@@ -82,7 +82,11 @@ function SearchRecipe() {
     APIService.getInstance()
       .getMyRecipes(user.uid)
       .then((recipes: Array<Recipe>) => {
-        setLoadedRecipes(recipes);
+        let map = new Map<number, Recipe>();
+        recipes.forEach((item) => {
+          map.set(item.id, item)
+        })
+        setLoadedRecipes(map);
       });
   };
 
