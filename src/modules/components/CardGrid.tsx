@@ -10,10 +10,9 @@ export default function CardGrid(props: {
   return (
     <div className='CardGrid'>
       <GridList container item xs={12} spacing={0}>
-        {props.loadedRecipes.size > 0 &&
-          Array.from(props.loadedRecipes.values()).map((tile: Recipe, i) => (
-            <CardItem tile={tile} key={i} loadedRecipes={props.loadedRecipes} />
-          ))}
+        {props.data.map((tile: Recipe, i) => (
+          <CardItem tile={tile} key={i} loadedRecipes={props.loadedRecipes} />
+        ))}
       </GridList>
     </div>
   );
