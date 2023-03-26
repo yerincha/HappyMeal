@@ -25,6 +25,9 @@ function SearchRecipe() {
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
 
   const handleSearch = (values: { query: string }) => {
+    if(values.query === undefined || !values.query.length) {
+      return alert('Please enter the ingredients!');
+    }
     const options = {
       method: 'GET',
       url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
@@ -47,7 +50,7 @@ function SearchRecipe() {
         let data = [];
         for (let i = 0; i < response.data.length; i++) {
           let item = response.data[i];
-          let recipe = new Recipe(item.id, item.title, item.image, false);
+          let recipe = new Recipe(item.id, item.title, item.image, false, false, -1);
           data.push(recipe);
         }
         setSearchResults(data);
