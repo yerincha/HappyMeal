@@ -70,13 +70,13 @@ class APIService {
   }
 
   // Fridge
-  public setFridge(userId: string, items: Item[]) {
+  public setFridge(userId: string, items: Item[]): Promise<void> {
     let itemObjArr: object[] = [];
 
     items.forEach((item) => {
       itemObjArr.push(item.toObject());
     });
-    setDoc(doc(db, 'fridge', userId), {
+    return setDoc(doc(db, 'fridge', userId), {
       items: itemObjArr,
     });
   }
