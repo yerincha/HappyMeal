@@ -1,5 +1,5 @@
 import React from 'react';
-import GridList from '@mui/material/Grid';
+import { List } from 'antd';
 import CollectionCardItem from './CollectionCardItem';
 import Recipe from '../../model/Recipe';
 
@@ -8,13 +8,14 @@ export default function CollectionCardGrid(props: {
   loadedRecipes: Map<number, Recipe>;
 }) {
   return (
-    <div className='CardGrid'>
-      <GridList container item xs={12} spacing={0}>
-        {props.loadedRecipes.size > 0 &&
-          Array.from(props.loadedRecipes.values()).map((tile: Recipe, i) => (
-            <CollectionCardItem loadItems={props.loadItems} tile={tile} key={i} loadedRecipes={props.loadedRecipes} />
-          ))}
-      </GridList>
-    </div>
+    <List
+        grid={{ gutter: 10, column: 3 }}
+        dataSource={props.loadedRecipes.values()}
+        renderItem={(item) => (
+          <List.Item>
+            <CollectionCardItem loadItems={props.loadItems} tile={item} loadedRecipes={props.loadedRecipes} />
+          </List.Item>
+        )}
+      />
   );
 }
