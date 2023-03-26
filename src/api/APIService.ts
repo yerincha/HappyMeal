@@ -10,6 +10,7 @@ import {
   doc,
   getDoc,
   Timestamp,
+  DocumentReference,
 } from 'firebase/firestore';
 import Item from '../model/Item';
 import Recipe from '../model/Recipe';
@@ -126,6 +127,8 @@ class APIService {
                   title: string;
                   image: string;
                   isFavorite: boolean;
+                  isTried: boolean;
+                  rating: number;
                 }) => {
                   recipeArray.push(Recipe.fromObject(recipe));
                 }
@@ -141,14 +144,16 @@ class APIService {
     });
   }
 
-  public setMyRecipes(userId: string, recipeArray: Recipe[]) {
+  public setMyRecipes(userId: string, recipeArray: Recipe[]): Promise<void> {
+    console.log(recipeArray);
+
     let recipeObjectArray: object[] = [];
 
     recipeArray.forEach((recipe) => {
       recipeObjectArray.push(recipe.toObject());
     });
 
-    setDoc(doc(db, 'recipe', userId), {
+    return setDoc(doc(db, 'recipe', userId), {
       list: recipeObjectArray,
     });
   }
