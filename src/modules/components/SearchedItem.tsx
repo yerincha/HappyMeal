@@ -1,13 +1,14 @@
-import { Grid, Input } from '@mui/material';
+import { Stack } from '@mui/material';
 import React, { useState } from 'react';
-import Button from './Button';
-import Typography from './Typography';
 import Item from '../../model/Item';
 import { useAuth } from '../../context/AuthContext';
 import APIService from '../../api/APIService';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Timestamp } from 'firebase/firestore';
+import { Button,DatePicker, InputNumber, List, Typography } from 'antd';
+import dayjs from 'dayjs';
+
+const { Text } = Typography;
 
 function SearchedItem(props: {
   item: { id: number; name: string; image: string };
@@ -17,9 +18,9 @@ function SearchedItem(props: {
   const [quantity, setQuantity] = useState(1);
   const [expiredAt, setExpiredAt] = useState(Timestamp.fromDate(new Date()));
   const { user } = useAuth();
-  const handleQuantityChange = (e: any) => {
-    e.preventDefault();
-    setQuantity(e.target.valueAsNumber);
+
+  const handleQuantityChange = (value: number | null) => {
+    setQuantity(value ?? 0);
   };
 
   const handleAddList = () => {
@@ -29,34 +30,28 @@ function SearchedItem(props: {
     APIService.getInstance().setFridge(
       user.uid,
       Array.from(loadedItems.values())
-    );
-    loadItems();
+    ).then((res) => {
+      loadItems();
+    });
   };
 
+  const handleDateChange = (value: dayjs.Dayjs | null, dateString: string) => {
+    if (value) {
+      setExpiredAt(Timestamp.fromDate(value.toDate()));
+    }
+  }
+
   return (
-    <Grid item container spacing={1} data-testid='searchedItem'>
-      <Grid item xs={3}>
-        <Typography align='left'>{props.item.name}</Typography>
-      </Grid>
-      <Grid item xs={1}>
-        <Input
-          size='small'
-          type='number'
-          onChange={handleQuantityChange}
-          value={quantity}
-          data-testid='quantity'
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <DatePicker
-          selected={expiredAt.toDate()}
-          onChange={(date: Date) => setExpiredAt(Timestamp.fromDate(date))}
-        />
-      </Grid>
-      <Button item onClick={handleAddList}>
-        Add to list
-      </Button>
-    </Grid>
+    <List.Item>
+      <Stack width={'100%'} direction={'row'} spacing={2} justifyContent="space-between" alignItems="center">
+        <Stack width={'30%'}>
+          <Text strong>{props.item.name}</Text>
+        </Stack>
+        <InputNumber min={1} max={100} defaultValue={1} onChange={handleQuantityChange}/>
+        <DatePicker defaultValue={dayjs()} format={'YYYY/MM/DD'} onChange={handleDateChange}/>
+        <Button type="dashed" onClick={handleAddList}>Add to List</Button>
+      </Stack>
+    </List.Item>
   );
 }
 export default SearchedItem;
