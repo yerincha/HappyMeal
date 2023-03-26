@@ -1,10 +1,13 @@
-import { Grid, Input } from '@mui/material';
+import { Stack } from '@mui/material';
 import React, { useState } from 'react';
-import Button from './Button';
-import Typography from './Typography';
 import Item from '../../model/Item';
 import APIService from '../../api/APIService';
 import { useAuth } from '../../context/AuthContext';
+import { InputNumber, DatePicker, Typography, List, Button } from 'antd';
+import dayjs from 'dayjs';
+import { Timestamp } from 'firebase/firestore';
+
+const { Text } = Typography;
 
 function LoadedItem(props: {
   key: number;
@@ -14,23 +17,16 @@ function LoadedItem(props: {
 }) {
   const { user } = useAuth();
   const [quantity, setQuantity] = useState(props.item.quantity);
-  const date = () => {
-    const expiredDate = props.item.expiredAt?.toDate();
-    return expiredDate;
-  };
+  const [expiredAt, setExpiredAt] = useState(props.item.expiredAt);
 
-  const handleQuantityChange = (e: any) => {
-    e.preventDefault();
-    if (isNaN(e.target.valueAsNumber)) {
-      setQuantity(0);
-    } else {
-      setQuantity(e.target.valueAsNumber);
-    }
+  const handleQuantityChange = (value: number | null) => {
+    setQuantity(value ?? 0);
   };
 
   const handleSave = () => {
     const { item, loadedItems } = props;
     item.quantity = quantity;
+    item.expiredAt = expiredAt;
     loadedItems.set(item.id, item);
     APIService.getInstance().setFridge(
       user.uid,
@@ -48,32 +44,24 @@ function LoadedItem(props: {
     loadItems();
   };
 
+  const handleDateChange = (value: dayjs.Dayjs | null, dateString: string) => {
+    if (value) {
+      setExpiredAt(Timestamp.fromDate(value.toDate()));
+    }
+  }
+
   return (
-    <Grid item container sx={{ p: 0 }} spacing={2} data-testid='myItem'>
-      <Grid item xs={3} sx={{ p: 0 }}>
-        <Typography align='left'>{props.item.name}</Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Input
-          data-testid='quantityInput'
-          size='small'
-          type='number'
-          onChange={handleQuantityChange}
-          value={quantity}
-        />
-      </Grid>
-      <Grid item xs={2}>
-        {props.item.expiredAt === null
-          ? 'N/A'
-          : `${props.item.expiredAt.toDate().toDateString()}`}
-      </Grid>
-      <Grid item xs={2}>
-        <Button onClick={handleSave} data-testid='saveButton'>Save</Button>
-      </Grid>
-      <Grid item xs={1}>
-        <Button onClick={handleDelete} data-testid='removeButton'>Remove</Button>
-      </Grid>
-    </Grid>
+    <List.Item>
+      <Stack width={'100%'} direction={'row'} spacing={2} justifyContent="space-between" alignItems="center">
+        <Stack width={'30%'}>
+          <Text strong>{props.item.name}</Text>
+        </Stack>
+        <InputNumber min={1} max={100} defaultValue={props.item.quantity} onChange={handleQuantityChange}/>
+        <DatePicker defaultValue={dayjs(props.item.expiredAt?.toDate())} format={'YYYY/MM/DD'}  onChange={handleDateChange}/>
+        <Button type="dashed" onClick={handleSave}>Update</Button>
+        <Button type="dashed" onClick={handleDelete}>Remove</Button>
+      </Stack>
+    </List.Item>
   );
 }
 export default LoadedItem;
