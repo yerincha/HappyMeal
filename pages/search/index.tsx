@@ -4,7 +4,6 @@ import AppAppBar from '../../src/modules/views/AppAppBar';
 import AppFooter from '../../src/modules/views/AppFooter';
 import AppForm from '../../src/modules/views/AppForm';
 import Box from '@mui/material/Box';
-import Typography from '../../src/modules/components/Typography';
 import withRoot from '../../src/modules/withRoot';
 import { Grid } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -14,12 +13,14 @@ import axios from 'axios';
 import APIService from '../../src/api/APIService';
 import { useAuth } from '../../src/context/AuthContext';
 import Item from '../../src/model/Item';
+import Typography from '../../src/modules/components/Typography';
+import { Divider, List } from 'antd';
 import SearchedItem from '../../src/modules/components/SearchedItem';
 import LoadedItem from '../../src/modules/components/LoadedItem';
 
 function Search() {
   const { user } = useAuth();
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState(new Array<Item>());
   const [loadedItems, setLoadedItems] = useState(new Map<number, Item>());
 
   const handleSearch = (values: { ingredient: string }) => {
@@ -106,33 +107,34 @@ function Search() {
               </Box>
             )}
           />
-          <Box sx={{ flexGrow: 1 }} data-testid='searchedResults'>
-            {searchResults.length > 0 &&
-              searchResults.map(
-                (item: { id: number; name: string; image: string }, i) => (
-                  <SearchedItem
-                    key={i}
-                    item={item}
-                    loadedItems={loadedItems}
-                    loadItems={loadItems}
-                  />
-                )
+
+          <List
+              itemLayout="horizontal"
+              dataSource={searchResults}
+              bordered
+              renderItem={(item, index) => (
+                <SearchedItem
+                  key={index}
+                  item={item}
+                  loadedItems={loadedItems}
+                  loadItems={loadItems}/>
               )}
-          </Box>
-          <Typography variant='h4' gutterBottom marked='center' align='center'>
-            My Fridge
-          </Typography>
-          <Box sx={{ flexGrow: 1 }}>
-            {loadedItems.size > 0 &&
-              Array.from(loadedItems.values()).map((item: Item, i) => (
+            />
+          <Divider>My Fridge</Divider>
+
+          <List
+              itemLayout="horizontal"
+              dataSource={loadedItems.values()}
+              bordered
+              renderItem={(item, index) => (
                 <LoadedItem
-                  key={i}
+                  key={index}
                   item={item}
                   loadedItems={loadedItems}
                   loadItems={loadItems}
                 />
-              ))}
-          </Box>
+              )}
+            />
         </AppForm>
       </Grid>
       <AppFooter />
