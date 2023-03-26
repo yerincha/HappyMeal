@@ -23,6 +23,9 @@ function Search() {
   const [loadedItems, setLoadedItems] = useState(new Map<number, Item>());
 
   const handleSearch = (values: { ingredient: string }) => {
+    if(values.ingredient === undefined || !values.ingredient.length) {
+      return alert('Please enter the ingredient!');
+    }
     const options = {
       method: 'GET',
       url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/search',
