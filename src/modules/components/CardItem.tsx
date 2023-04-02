@@ -53,6 +53,7 @@ export default function CardGrid(props: {
   };
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <Card cover={<img alt='example' src={props.tile.image} />}>
       <Meta title={props.tile.title} data-testid='recipeTitle' />
       <Stack marginTop={3} spacing={2}>
