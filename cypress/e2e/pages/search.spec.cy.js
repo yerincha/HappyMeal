@@ -40,10 +40,10 @@ describe('/search', () => {
     cy.url().should(includeString, SEARCH_URL)
     cy.get("[name='ingredient']").type('onion');
     cy.get("[data-testid='search']").click();
-    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
       visitSearch();
       cy.get("[data-testid='myItem']").contains('onion');
-      cy.get("[data-testid='removeButton']").click().wait(1000);
+      cy.get("[data-testid='removeButton']").first().click().wait(1000);
     });
   });
 
@@ -52,15 +52,15 @@ describe('/search', () => {
     cy.url().should(includeString, SEARCH_URL)
     cy.get("[name='ingredient']").type('onion');
     cy.get("[data-testid='search']").click();
-    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
       visitSearch();
       cy.get("[data-testid='myItem']").contains('onion');
 
       cy.get("[name='ingredient']").type('onion');
       cy.get("[data-testid='search']").click();
-      cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+      cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
         cy.get("[data-testid='myItem']").should('have.length', 1);
-        cy.get("[data-testid='removeButton']").click();
+        cy.get("[data-testid='removeButton']").first().click();
       });
     });
   });
@@ -74,10 +74,10 @@ describe('/search', () => {
     cy.get("[data-testid='searchedResults']").children().first().find("input").first().clear();
     cy.get("[data-testid='searchedResults']").children().first().find("input").first().type(2);
 
-    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
       visitSearch();
       cy.get("[data-testid='myItem']").contains('onion');
-      cy.get("[data-testid='myItem']").contains('2');
+      cy.get("[data-testid='myItemQuantity']").invoke('val').should('eq', '2');
     });
   });
 
@@ -87,13 +87,15 @@ describe('/search', () => {
     cy.get("[name='ingredient']").type('onion');
     cy.get("[data-testid='search']").click().wait(1000);
 
-    cy.get("[data-testid='searchedResults']").children().first().find("input").eq(1).type('{backspace}4');
+    cy.get("[data-testid='myItemDate']").first().click();
+    cy.get('.ant-picker-cell-inner').contains('10').click();
+    cy.get("[data-testid='myItemDate']").invoke('val').should('eq', '2023/04/10');
 
     cy.get("body").click(0,0);
 
-    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
       visitSearch();
-      cy.get("[data-testid='myItem']").contains('2024');
+      cy.get("[data-testid='myItemDate']").invoke('val').should('eq', '2023/04/10');
       cy.get("[data-testid='removeButton']").click();
     });
   });
@@ -101,10 +103,16 @@ describe('/search', () => {
   it('Remove ingredient from My Fridge list', () => {
     visitSearch();
     cy.url().should(includeString, SEARCH_URL)
-    cy.get("[data-testid='myItem']").contains('onion');
-    cy.get("[data-testid='removeButton']").click().wait(1000).then(() => {
+
+    cy.get("[name='ingredient']").type('onion');
+    cy.get("[data-testid='search']").click();
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
       visitSearch();
-      cy.get("[data-testid='myItem']").should('not.exist');
+      cy.get("[data-testid='myItem']").contains('onion');
+      cy.get("[data-testid='removeButton']").click().wait(1000).then(() => {
+        visitSearch();
+        cy.get("[data-testid='myItem']").should('not.exist');
+      });
     });
   });
 
@@ -113,20 +121,39 @@ describe('/search', () => {
     cy.url().should(includeString, SEARCH_URL)
     cy.get("[name='ingredient']").type('onion');
     cy.get("[data-testid='search']").click();
-    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").click().wait(1000).then(() => {
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
       visitSearch();
       cy.get("[data-testid='myItem']").contains('onion');
-      cy.get("[data-testid='quantityInput']").clear();
-      cy.get("[data-testid='quantityInput']").type(2);
+      cy.get("[data-testid='myItemQuantity']").clear();
+      cy.get("[data-testid='myItemQuantity']").type(2);
       cy.get("[data-testid='saveButton']").click().wait(1000).then(() => {
         visitSearch();
-        cy.get("[data-testid='myItem']").contains('20');
+        cy.get("[data-testid='myItemQuantity']").invoke('val').should('eq', '2');
         cy.get("[data-testid='removeButton']").click();
       });
     });
   });
 
-  xit('Update expiration date from My Fridge List', async () => {
+  it('Update expiration date from My Fridge List', async () => {
+    visitSearch();
+    cy.url().should(includeString, SEARCH_URL)
+    cy.get("[name='ingredient']").type('onion');
+    cy.get("[data-testid='search']").click().wait(1000);
 
+    cy.get("body").click(0,0);
+
+    cy.get("[data-testid='searchedResults']").children().first().find("[type=button]").first().click().wait(1000).then(() => {
+      visitSearch();
+
+      cy.get("[data-testid='myItemDate']").first().click();
+      cy.get('.ant-picker-cell-inner').contains('10').click();
+      cy.get("[data-testid='myItemDate']").invoke('val').should('eq', '2023/04/10');
+
+      cy.get("[data-testid='saveButton']").click().wait(1000).then(() => {
+        visitSearch();
+        cy.get("[data-testid='myItemDate']").invoke('val').should('eq', '2023/04/10');
+        cy.get("[data-testid='removeButton']").click();
+      });
+    });
   });
 });
