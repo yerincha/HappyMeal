@@ -96,7 +96,7 @@ export default function CollectionCardGrid(props: {
       ]}
     >
       <Meta
-        title={props.tile.title}
+        title={props.tile.title} data-testid='recipeTitle'
       />
       <Stack marginTop={3} spacing={2}>
         <Button type="dashed" onClick={handleDetailClick}>See Detail</Button>
