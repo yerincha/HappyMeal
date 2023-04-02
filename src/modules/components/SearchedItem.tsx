@@ -42,13 +42,13 @@ function SearchedItem(props: {
   }
 
   return (
-    <List.Item>
+    <List.Item data-testid='searchedItem'>
       <Stack width={'100%'} direction={'row'} spacing={2} justifyContent="space-between" alignItems="center">
         <Stack width={'30%'}>
           <Text strong>{props.item.name}</Text>
         </Stack>
         <InputNumber min={1} max={100} defaultValue={1} onChange={handleQuantityChange}/>
-        <DatePicker defaultValue={dayjs()} format={'YYYY/MM/DD'} onChange={handleDateChange}/>
+        <DatePicker defaultValue={dayjs()} format={'YYYY/MM/DD'} onChange={handleDateChange} data-testid='myItemDate'/>
         <Button type="dashed" onClick={handleAddList}>Add to List</Button>
       </Stack>
     </List.Item>
