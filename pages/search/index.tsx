@@ -112,12 +112,14 @@ function Search() {
               itemLayout="horizontal"
               dataSource={searchResults}
               bordered
+              data-testid='searchedResults'
               renderItem={(item, index) => (
                 <SearchedItem
                   key={index}
                   item={item}
                   loadedItems={loadedItems}
-                  loadItems={loadItems}/>
+                  loadItems={loadItems}
+                  />
               )}
             />
           <Divider>My Fridge</Divider>
@@ -126,6 +128,7 @@ function Search() {
               itemLayout="horizontal"
               dataSource={loadedItems.values()}
               bordered
+              data-testid='myItem'
               renderItem={(item, index) => (
                 <LoadedItem
                   key={index}
