@@ -4,7 +4,7 @@ import { API_KEY } from '../../credentials';
 import APIService from '../../api/APIService';
 import { useAuth } from '../../context/AuthContext';
 import Recipe from '../../model/Recipe';
-import { Button,Card } from 'antd';
+import { Button, Card } from 'antd';
 import { Stack } from '@mui/material';
 
 const { Meta } = Card;
@@ -45,35 +45,33 @@ export default function CardGrid(props: {
       return;
     }
     loadedRecipes.set(tile.id, tile);
-    APIService.getInstance().setMyRecipes(
-        user.uid,
-        Array.from(loadedRecipes.values())
-      ).then((res) => {
+    APIService.getInstance()
+      .setMyRecipes(user.uid, Array.from(loadedRecipes.values()))
+      .then((res) => {
         setIsSaving(false);
       });
   };
 
   return (
-    <Card
-      cover={
-        <img
-          alt="example"
-          src={props.tile.image}
-        />
-      }
-    >
-      <Meta
-        title={props.tile.title}
-      />
+    <Card cover={<img alt='example' src={props.tile.image} />}>
+      <Meta title={props.tile.title} data-testid='recipeTitle' />
       <Stack marginTop={3} spacing={2}>
-        <Button type="dashed" onClick={handleDetailClick}>See Detail</Button>
         <Button
-          type="dashed" 
-          loading={isSaving} 
-          onClick={handleAddToMyListClick}>
-          {
-            props.loadedRecipes.has(props.tile.id) ? "✅ Already In My Recipe" : "Add to My Recipe"
-          }
+          type='dashed'
+          onClick={handleDetailClick}
+          data-testid='seeDetailButton'
+        >
+          See Detail
+        </Button>
+        <Button
+          type='dashed'
+          loading={isSaving}
+          onClick={handleAddToMyListClick}
+          data-testid='addRecipeButton'
+        >
+          {props.loadedRecipes.has(props.tile.id)
+            ? '✅ Already In My Recipe'
+            : 'Add to My Recipe'}
         </Button>
       </Stack>
     </Card>
