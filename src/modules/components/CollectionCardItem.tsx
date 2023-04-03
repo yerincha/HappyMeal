@@ -91,19 +91,19 @@ export default function CollectionCardGrid(props: {
         />
       }
       actions={[
-        <CheckOutlined key="tried" style={props.tile.isTried ? { color: '#FF3D00' } : {}} onClick={handleTried}/>,
-        <DeleteOutlined key="delete" onClick={(event) => handleDelete(event)}/>,
+        <CheckOutlined key="tried" style={props.tile.isTried ? { color: '#FF3D00' } : {}} onClick={handleTried} data-testid='triedButton'/>,
+        <DeleteOutlined key="delete" onClick={(event) => handleDelete(event)} data-testid='deleteButton'/>,
       ]}
     >
       <Meta
         title={props.tile.title} data-testid='recipeTitle'
       />
       <Stack marginTop={3} spacing={2}>
-        <Button type="dashed" onClick={handleDetailClick}>See Detail</Button>
+        <Button type="dashed" onClick={handleDetailClick} data-testid='seeDetailButton'>See Detail</Button>
         {props.tile.isTried ? 
           <Stack>
-            <Text type="secondary">🍽️ My Rating</Text>
-            <Rate value={props.tile.rating} onChange={(value) => handleRate(value)}/> 
+            <Text type="secondary" data-testid='myRatingTitle'>🍽️ My Rating</Text>
+            <Rate allowHalf value={props.tile.rating} onChange={(value) => handleRate(value)}/> 
           </Stack>
         : 
         <></>}
