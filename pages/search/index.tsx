@@ -24,7 +24,7 @@ function Search() {
   const [loadedItems, setLoadedItems] = useState(new Map<number, Item>());
 
   const handleSearch = (values: { ingredient: string }) => {
-    if(values.ingredient === undefined || !values.ingredient.length) {
+    if (values.ingredient === undefined || !values.ingredient.length) {
       return alert('Please enter the ingredient!');
     }
     const options = {
@@ -100,8 +100,8 @@ function Search() {
                       size='small'
                     />
                   </Grid>
-                  <Grid item sx={{mt:5, ml:1}}>
-                    <SearchIcon onClick={handleSearch} data-testid='search'/>
+                  <Grid item sx={{ mt: 5, ml: 1 }}>
+                    <SearchIcon onClick={handleSearch} data-testid='search' />
                   </Grid>
                 </Grid>
               </Box>
@@ -109,35 +109,35 @@ function Search() {
           />
 
           <List
-              itemLayout="horizontal"
-              dataSource={searchResults}
-              bordered
-              data-testid='searchedResults'
-              renderItem={(item, index) => (
-                <SearchedItem
-                  key={index}
-                  item={item}
-                  loadedItems={loadedItems}
-                  loadItems={loadItems}
-                  />
-              )}
-            />
+            itemLayout='horizontal'
+            dataSource={searchResults}
+            bordered
+            data-testid='searchedResults'
+            renderItem={(item, index) => (
+              <SearchedItem
+                key={index}
+                item={item}
+                loadedItems={loadedItems}
+                loadItems={loadItems}
+              />
+            )}
+          />
           <Divider>My Fridge</Divider>
 
           <List
-              itemLayout="horizontal"
-              dataSource={loadedItems.values()}
-              bordered
-              data-testid='myItem'
-              renderItem={(item, index) => (
-                <LoadedItem
-                  key={index}
-                  item={item}
-                  loadedItems={loadedItems}
-                  loadItems={loadItems}
-                />
-              )}
-            />
+            itemLayout='horizontal'
+            dataSource={loadedItems.values()}
+            bordered
+            data-testid='myItem'
+            renderItem={(item, index) => (
+              <LoadedItem
+                key={index}
+                item={item}
+                loadedItems={loadedItems}
+                loadItems={loadItems}
+              />
+            )}
+          />
         </AppForm>
       </Grid>
       <AppFooter />
