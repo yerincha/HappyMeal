@@ -6,15 +6,16 @@ import AppForm from '../../src/modules/views/AppForm';
 import Box from '@mui/material/Box';
 import Typography from '../../src/modules/components/Typography';
 import withRoot from '../../src/modules/withRoot';
-import { Grid } from '@mui/material';
 import APIService from '../../src/api/APIService';
 import { useAuth } from '../../src/context/AuthContext';
 import Recipe from '../../src/model/Recipe';
 import CollectionCardGrid from '../../src/modules/components/CollectionCardGrid';
+import { Cascader } from 'antd';
 
 function RecipeCollection() {
   const { user } = useAuth();
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
+  const [filteredLoadedRecipes, setFilteredLoadedRecipes] = useState(new Map<number, Recipe>());
 
   const loadItems = () => {
     APIService.getInstance()
@@ -25,6 +26,7 @@ function RecipeCollection() {
           map.set(item.id, item);
         });
         setLoadedRecipes(map);
+        setFilteredLoadedRecipes(map);
       });
   };
 
@@ -32,10 +34,64 @@ function RecipeCollection() {
     loadItems();
   }, []);
 
+  const options: Option[] = [
+    {
+      value: 'no',
+      label: 'No Filter',
+    },
+    {
+      value: 'not_tried',
+      label: 'Not Tried',
+    },
+    {
+      value: 'tried',
+      label: 'Tried',
+    },
+    {
+      value: 'good_rating',
+      label: 'Good Rating (Over 4)',
+    },
+  ];
+
+  const onChange = (value: string[]) => {
+    let map = new Map<number, Recipe>()
+    switch (value[0]) {
+      case 'no':
+        setFilteredLoadedRecipes(loadedRecipes);
+        break;
+      case 'not_tried':
+        map = new Map<number, Recipe>();
+        loadedRecipes.forEach((item) => {
+          if (!item.isTried) {
+            map.set(item.id, item);
+          }
+        });
+        setFilteredLoadedRecipes(map);
+        break;
+      case 'tried':
+        map = new Map<number, Recipe>();
+        loadedRecipes.forEach((item) => {
+          if (item.isTried) {
+            map.set(item.id, item);
+          }
+        });
+        setFilteredLoadedRecipes(map);
+        break;
+      case 'good_rating':
+        map = new Map<number, Recipe>();
+        loadedRecipes.forEach((item) => {
+          if (item.isTried && item.rating && item.rating >= 4) {
+            map.set(item.id, item);
+          }
+        });
+        setFilteredLoadedRecipes(map);
+        break;
+    }
+  };
+
   return (
     <React.Fragment>
       <AppAppBar />
-      <Grid container justifyContent='center' alignItems='center'>
         <AppForm>
           <React.Fragment>
             <Typography
@@ -46,12 +102,14 @@ function RecipeCollection() {
             >
               My Recipes
             </Typography>
+            <div className='align-right' style={{margin: '10px'}}>
+              <Cascader options={options} onChange={onChange} placeholder="Please select filter"/>
+            </div>
           </React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
-            <CollectionCardGrid loadedRecipes={loadedRecipes} loadItems={loadItems}/>
+            <CollectionCardGrid loadedRecipes={filteredLoadedRecipes} loadItems={loadItems}/>
           </Box>
         </AppForm>
-      </Grid>
       <AppFooter />
     </React.Fragment>
   );
