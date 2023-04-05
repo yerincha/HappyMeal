@@ -9,13 +9,18 @@ export default function CollectionCardGrid(props: {
 }) {
   return (
     <List
-        grid={{ gutter: 10, column: 3 }}
-        dataSource={props.loadedRecipes.values()}
-        renderItem={(item) => (
-          <List.Item>
-            <CollectionCardItem loadItems={props.loadItems} tile={item} loadedRecipes={props.loadedRecipes} />
-          </List.Item>
-        )}
-      />
+      width={'70%'}
+      grid={{ gutter: 10, column: 3 }}
+      dataSource={props.loadedRecipes.values()}
+      renderItem={(item) => (
+        <List.Item>
+          <CollectionCardItem
+            loadItems={props.loadItems}
+            tile={item}
+            loadedRecipes={props.loadedRecipes}
+          />
+        </List.Item>
+      )}
+    />
   );
 }
