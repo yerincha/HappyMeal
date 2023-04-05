@@ -12,6 +12,11 @@ import Recipe from '../../src/model/Recipe';
 import CollectionCardGrid from '../../src/modules/components/CollectionCardGrid';
 import { Cascader } from 'antd';
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 function RecipeCollection() {
   const { user } = useAuth();
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
@@ -53,39 +58,43 @@ function RecipeCollection() {
     },
   ];
 
-  const onChange = (value: string[]) => {
-    let map = new Map<number, Recipe>()
-    switch (value[0]) {
-      case 'no':
-        setFilteredLoadedRecipes(loadedRecipes);
-        break;
-      case 'not_tried':
-        map = new Map<number, Recipe>();
-        loadedRecipes.forEach((item) => {
-          if (!item.isTried) {
-            map.set(item.id, item);
-          }
-        });
-        setFilteredLoadedRecipes(map);
-        break;
-      case 'tried':
-        map = new Map<number, Recipe>();
-        loadedRecipes.forEach((item) => {
-          if (item.isTried) {
-            map.set(item.id, item);
-          }
-        });
-        setFilteredLoadedRecipes(map);
-        break;
-      case 'good_rating':
-        map = new Map<number, Recipe>();
-        loadedRecipes.forEach((item) => {
-          if (item.isTried && item.rating && item.rating >= 4) {
-            map.set(item.id, item);
-          }
-        });
-        setFilteredLoadedRecipes(map);
-        break;
+  const handleChange = (value: string[]) => {
+    if (value) {
+      let map = new Map<number, Recipe>()
+      switch (value[0]) {
+        case 'no':
+          setFilteredLoadedRecipes(loadedRecipes);
+          break;
+        case 'not_tried':
+          map = new Map<number, Recipe>();
+          loadedRecipes.forEach((item) => {
+            if (!item.isTried) {
+              map.set(item.id, item);
+            }
+          });
+          setFilteredLoadedRecipes(map);
+          break;
+        case 'tried':
+          map = new Map<number, Recipe>();
+          loadedRecipes.forEach((item) => {
+            if (item.isTried) {
+              map.set(item.id, item);
+            }
+          });
+          setFilteredLoadedRecipes(map);
+          break;
+        case 'good_rating':
+          map = new Map<number, Recipe>();
+          loadedRecipes.forEach((item) => {
+            if (item.isTried && item.rating && item.rating >= 4) {
+              map.set(item.id, item);
+            }
+          });
+          setFilteredLoadedRecipes(map);
+          break;
+      }
+    } else {
+      setFilteredLoadedRecipes(loadedRecipes);
     }
   };
 
@@ -103,7 +112,7 @@ function RecipeCollection() {
               My Recipes
             </Typography>
             <div className='align-right' style={{margin: '10px'}}>
-              <Cascader options={options} onChange={onChange} placeholder="Please select filter"/>
+              <Cascader options={options} onChange={handleChange} placeholder="Please select filter"/>
             </div>
           </React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
