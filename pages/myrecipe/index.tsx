@@ -21,6 +21,7 @@ function RecipeCollection() {
   const { user } = useAuth();
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
   const [filteredLoadedRecipes, setFilteredLoadedRecipes] = useState(new Map<number, Recipe>());
+  const [sortOption, setSortOption] = useState("");
 
   const loadItems = () => {
     APIService.getInstance()
@@ -39,7 +40,7 @@ function RecipeCollection() {
     loadItems();
   }, []);
 
-  const options: Option[] = [
+  const filterOptions: Option[] = [
     {
       value: 'no',
       label: 'No Filter',
@@ -58,7 +59,30 @@ function RecipeCollection() {
     },
   ];
 
-  const handleChange = (value: string[]) => {
+  const sortOptions: Option[] = [
+    {
+      value: 'no',
+      label: 'No Filter',
+    },
+    {
+      value: 'name_asc',
+      label: 'Name A-Z',
+    },
+    {
+      value: 'name_dsc',
+      label: 'Name Z-A',
+    },
+    {
+      value: 'added_datetime_asc',
+      label: 'Added Date ASC',
+    },
+    {
+      value: 'added_datetime_dsc',
+      label: 'Added Date DSC',
+    },
+  ];
+
+  const handleFilterChange = (value: string[]) => {
     if (value) {
       let map = new Map<number, Recipe>()
       switch (value[0]) {
@@ -98,6 +122,14 @@ function RecipeCollection() {
     }
   };
 
+  const handleSortChange = (value: string[]) => {
+    if (value) {
+      setSortOption(value[0]);
+    } else {
+      setSortOption("");
+    }
+  };
+
   return (
     <React.Fragment>
       <AppAppBar />
@@ -112,11 +144,12 @@ function RecipeCollection() {
               My Recipes
             </Typography>
             <div className='align-right' style={{margin: '10px'}}>
-              <Cascader options={options} onChange={handleChange} placeholder="Please select filter"/>
+              <Cascader options={filterOptions} onChange={handleFilterChange} placeholder="Please select filter"/>
+              <Cascader style={{marginLeft: '10px'}} options={sortOptions} onChange={handleSortChange} placeholder="Sort options"/>
             </div>
           </React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
-            <CollectionCardGrid loadedRecipes={filteredLoadedRecipes} loadItems={loadItems}/>
+            <CollectionCardGrid loadedRecipes={filteredLoadedRecipes} loadItems={loadItems} sortOption={sortOption}/>
           </Box>
         </AppForm>
       <AppFooter />
