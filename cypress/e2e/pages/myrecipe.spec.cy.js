@@ -908,3 +908,266 @@ it("Able to filter recipes with 'Tried' Flag and reset filter to show all list",
         });
     });
 });
+
+// Test - Sort for recipe collection
+it('Able to sort recipes by name ascending order', () => {
+  visitRecipes();
+  cy.get(getElementByName('query')).type('onion');
+  cy.get(getElementByDataTestId('SearchIcon'))
+    .click()
+    .wait(1000)
+    .then(() => {
+      cy.get("[data-testid='addRecipeButton']").each(($el) => {
+        cy.wrap($el).click();
+      });
+    })
+    .wait(500)
+    .then(() => {
+      visitMyRecipe();
+
+      // Show 6 recipes
+      cy.get(getElementByDataTestId('triedButton')).should('have.length', 6);
+
+      cy.get(getElementByDataTestId('triedButton'))
+        .first()
+        .click()
+        .wait(500)
+        .then(() => {
+          cy.get(getElementByDataTestId('sortCascader'))
+            .click()
+            .wait(100)
+            .type('{downArrow}{downArrow}{enter}')
+            .wait(500)
+            .then(() => {
+              // Show all recipes
+              cy.get('[class="ant-list-item"]').should('have.length', 6);
+
+              // Show recipes with ascending order
+              var titles = [];
+              cy.get("[data-testid='recipeTitle']").each(($el) => {
+                titles.push($el.text());
+              });
+
+              cy.wrap(titles).should('equal', titles.sort()); // you may need deep equal here instead
+
+              // Deleting items
+              visitMyRecipe();
+              for (let i = 0; i < 6; i++) {
+                visitMyRecipe();
+                cy.get("[data-testid='deleteButton']")
+                  .first()
+                  .click()
+                  .wait(500);
+              }
+            });
+        });
+    });
+});
+
+it('Able to sort recipes by name descending order', () => {
+  visitRecipes();
+  cy.get(getElementByName('query')).type('onion');
+  cy.get(getElementByDataTestId('SearchIcon'))
+    .click()
+    .wait(1000)
+    .then(() => {
+      cy.get("[data-testid='addRecipeButton']").each(($el) => {
+        cy.wrap($el).click();
+      });
+    })
+    .wait(500)
+    .then(() => {
+      visitMyRecipe();
+
+      // Show 6 recipes
+      cy.get(getElementByDataTestId('triedButton')).should('have.length', 6);
+
+      cy.get(getElementByDataTestId('triedButton'))
+        .first()
+        .click()
+        .wait(500)
+        .then(() => {
+          cy.get(getElementByDataTestId('sortCascader'))
+            .click()
+            .wait(100)
+            .type('{downArrow}{downArrow}{downArrow}{enter}')
+            .wait(500)
+            .then(() => {
+              // Show all recipes
+              cy.get('[class="ant-list-item"]').should('have.length', 6);
+
+              // Show recipes with ascending order
+              var titles = [];
+              cy.get("[data-testid='recipeTitle']").each(($el) => {
+                titles.push($el.text());
+              });
+
+              cy.wrap(titles).should('equal', titles.sort().reverse()); // you may need deep equal here instead
+
+              // Deleting items
+              visitMyRecipe();
+              for (let i = 0; i < 6; i++) {
+                visitMyRecipe();
+                cy.get("[data-testid='deleteButton']")
+                  .first()
+                  .click()
+                  .wait(500);
+              }
+            });
+        });
+    });
+});
+
+it('Able to sort recipes by added date time ascending order', () => {
+  let titlesByAddedOrder = [];
+  let titlesByShowingOrder = [];
+
+  let addedItemsPromise;
+  let sortedShowingItemPromise;
+
+  visitRecipes();
+  cy.get(getElementByName('query')).type('onion');
+  cy.get(getElementByDataTestId('SearchIcon'))
+    .click()
+    .wait(1000)
+    .then(() => {
+      let count1 = 0;
+      addedItemsPromise = new Promise((resolve, reject) => {
+        cy.get("[data-testid='recipeTitle']").each(($el) => {
+          titlesByAddedOrder.push(`${$el.text()}`);
+          count1++;
+          if (count1 === 6) {
+            resolve();
+          }
+        });
+      });
+
+      cy.get("[data-testid='addRecipeButton']")
+        .wait(500)
+        .each(($el) => {
+          cy.wrap($el).click();
+        });
+    })
+    .wait(500)
+    .then(() => {
+      visitMyRecipe();
+
+      // Show 6 recipes
+      cy.get(getElementByDataTestId('triedButton')).should('have.length', 6);
+
+      cy.get(getElementByDataTestId('sortCascader'))
+        .click()
+        .wait(100)
+        .type('{downArrow}{downArrow}{downArrow}{downArrow}{enter}')
+        .wait(500)
+        .then(() => {
+          // Show all recipes
+          cy.get('[class="ant-list-item"]').should('have.length', 6);
+
+          // Show recipes with added date time by ascending order
+          let count2 = 0;
+          sortedShowingItemPromise = new Promise((resolve, reject) => {
+            cy.get("[data-testid='recipeTitle']").each(($el) => {
+              titlesByShowingOrder.push(`${$el.text()}`);
+              count2++;
+              if (count2 === 6) {
+                resolve();
+              }
+            });
+          });
+
+          addedItemsPromise.then(() => {
+            sortedShowingItemPromise.then(() => {
+              cy.wrap(JSON.stringify(titlesByAddedOrder)).should(
+                'equal',
+                JSON.stringify(titlesByShowingOrder)
+              );
+            });
+          });
+
+          // Deleting items
+          visitMyRecipe();
+          for (let i = 0; i < 6; i++) {
+            visitMyRecipe();
+            cy.get("[data-testid='deleteButton']").first().click().wait(500);
+          }
+        });
+    });
+});
+
+it('Able to sort recipes by added date time descending order', () => {
+  let titlesByAddedOrder = [];
+  let titlesByShowingOrder = [];
+
+  let addedItemsPromise;
+  let sortedShowingItemPromise;
+
+  visitRecipes();
+  cy.get(getElementByName('query')).type('onion');
+  cy.get(getElementByDataTestId('SearchIcon'))
+    .click()
+    .wait(1000)
+    .then(() => {
+      let count1 = 0;
+      addedItemsPromise = new Promise((resolve, reject) => {
+        cy.get("[data-testid='recipeTitle']").each(($el) => {
+          titlesByAddedOrder.push(`${$el.text()}`);
+          count1++;
+          if (count1 === 6) {
+            resolve();
+          }
+        });
+      });
+
+      cy.get("[data-testid='addRecipeButton']")
+        .wait(500)
+        .each(($el) => {
+          cy.wrap($el).click();
+        });
+    })
+    .wait(500)
+    .then(() => {
+      visitMyRecipe();
+
+      // Show 6 recipes
+      cy.get(getElementByDataTestId('triedButton')).should('have.length', 6);
+
+      cy.get(getElementByDataTestId('sortCascader'))
+        .click()
+        .wait(100)
+        .type('{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{enter}')
+        .wait(500)
+        .then(() => {
+          // Show all recipes
+          cy.get('[class="ant-list-item"]').should('have.length', 6);
+
+          // Show recipes with added date time by descending order
+          let count2 = 0;
+          sortedShowingItemPromise = new Promise((resolve, reject) => {
+            cy.get("[data-testid='recipeTitle']").each(($el) => {
+              titlesByShowingOrder.unshift(`${$el.text()}`);
+              count2++;
+              if (count2 === 6) {
+                resolve();
+              }
+            });
+          });
+
+          addedItemsPromise.then(() => {
+            sortedShowingItemPromise.then(() => {
+              cy.wrap(JSON.stringify(titlesByAddedOrder)).should(
+                'equal',
+                JSON.stringify([...titlesByShowingOrder].reverse())
+              );
+            });
+          });
+
+          // Deleting items
+          visitMyRecipe();
+          for (let i = 0; i < 6; i++) {
+            visitMyRecipe();
+            cy.get("[data-testid='deleteButton']").first().click().wait(500);
+          }
+        });
+    });
+});
