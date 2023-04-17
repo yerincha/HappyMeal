@@ -5,7 +5,7 @@ import APIService from '../../api/APIService';
 import { useAuth } from '../../context/AuthContext';
 import Recipe from '../../model/Recipe';
 import { Button, Rate } from 'antd';
-import { DeleteOutlined,CheckOutlined } from '@ant-design/icons';
+import { DeleteOutlined, CheckOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
 import { Stack } from '@mui/material';
 
@@ -84,32 +84,55 @@ export default function CollectionCardGrid(props: {
 
   return (
     <Card
-      cover={
-        <img
-          alt="example"
-          src={props.tile.image}
-        />
-      }
+      // eslint-disable-next-line @next/next/no-img-element
+      cover={<img alt='example' src={props.tile.image} />}
       actions={[
-        <CheckOutlined key="tried" style={props.tile.isTried ? { color: '#FF3D00' } : {}} onClick={handleTried} data-testid='triedButton'/>,
-        <DeleteOutlined key="delete" onClick={(event) => handleDelete(event)} data-testid='deleteButton'/>,
+        <CheckOutlined
+          key='tried'
+          style={props.tile.isTried ? { color: '#FF3D00' } : {}}
+          onClick={handleTried}
+          data-testid='triedButton'
+        />,
+        <DeleteOutlined
+          key='delete'
+          onClick={(event) => handleDelete(event)}
+          data-testid='deleteButton'
+        />,
       ]}
     >
+      <Meta title={props.tile.title} data-testid='recipeTitle' />
       <Meta
-        title={props.tile.title} data-testid='recipeTitle'
+        data-testid='recipeAddedDateTime'
+        data-time={props.tile.addedDateTime?.toDate().getTime()}
+        description={`${props.tile.addedDateTime
+          ?.toDate()
+          .toLocaleDateString()} ${props.tile.addedDateTime
+          ?.toDate()
+          .toLocaleTimeString()}`}
       />
       <Stack marginTop={3} spacing={2}>
-        <Button type="dashed" onClick={handleDetailClick} data-testid='seeDetailButton'>See Detail</Button>
-        {props.tile.isTried ? 
+        <Button
+          type='dashed'
+          onClick={handleDetailClick}
+          data-testid='seeDetailButton'
+        >
+          See Detail
+        </Button>
+        {props.tile.isTried ? (
           <Stack>
-            <Text type="secondary" data-testid='myRatingTitle'>🍽️ My Rating</Text>
-            <Rate allowHalf value={props.tile.rating} onChange={(value) => handleRate(value)}/> 
+            <Text type='secondary' data-testid='myRatingTitle'>
+              🍽️ My Rating
+            </Text>
+            <Rate
+              allowHalf
+              value={props.tile.rating}
+              onChange={(value) => handleRate(value)}
+            />
           </Stack>
-        : 
-        <></>}
+        ) : (
+          <></>
+        )}
       </Stack>
-      
-      
     </Card>
   );
 }
