@@ -144,8 +144,8 @@ function RecipeCollection() {
               My Recipes
             </Typography>
             <div className='align-right' style={{margin: '10px'}}>
-              <Cascader options={filterOptions} onChange={handleFilterChange} placeholder="Please select filter"/>
-              <Cascader style={{marginLeft: '10px'}} options={sortOptions} onChange={handleSortChange} placeholder="Sort options"/>
+              <Cascader data-testid='filterCascader' options={filterOptions} onChange={handleFilterChange} placeholder="Please select filter"/>
+              <Cascader data-testid='sortCascader' style={{marginLeft: '10px'}} options={sortOptions} onChange={handleSortChange} placeholder="Sort options"/>
             </div>
           </React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
