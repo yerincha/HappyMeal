@@ -25,7 +25,7 @@ function SearchRecipe() {
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
 
   const handleSearch = (values: { query: string }) => {
-    if(values.query === undefined || !values.query.length) {
+    if (values.query === undefined || !values.query.length) {
       return alert('Please enter the ingredients!');
     }
     const options = {
@@ -33,7 +33,7 @@ function SearchRecipe() {
       url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
       params: {
         ingredients: values.query,
-        number: '6',
+        number: '50',
         ignorePantry: 'true',
         ranking: '1',
       },
@@ -50,7 +50,14 @@ function SearchRecipe() {
         let data = [];
         for (let i = 0; i < response.data.length; i++) {
           let item = response.data[i];
-          let recipe = new Recipe(item.id, item.title, item.image, false, false, -1);
+          let recipe = new Recipe(
+            item.id,
+            item.title,
+            item.image,
+            false,
+            false,
+            -1
+          );
           data.push(recipe);
         }
         setSearchResults(data);
@@ -76,7 +83,7 @@ function SearchRecipe() {
           }
           setMyFridgeItems(itemNames);
           handleSearch({ query: itemNames });
-        })
+        });
     }
     handleSearch({ query: myFridgeItems });
   };
@@ -87,8 +94,8 @@ function SearchRecipe() {
       .then((recipes: Array<Recipe>) => {
         let map = new Map<number, Recipe>();
         recipes.forEach((item) => {
-          map.set(item.id, item)
-        })
+          map.set(item.id, item);
+        });
         setLoadedRecipes(map);
       });
   };
@@ -96,18 +103,18 @@ function SearchRecipe() {
   React.useEffect(() => {
     let itemNames = '';
     APIService.getInstance()
-    .getFridgeItems(user.uid)
-    .then((items: Array<Item>) => {
-      for (let i = 0; i < items.length; i++) {
-        if (i !== items.length - 1) {
-          itemNames += items[i].name + ', ';
-        } else {
-          itemNames += items[i].name;
+      .getFridgeItems(user.uid)
+      .then((items: Array<Item>) => {
+        for (let i = 0; i < items.length; i++) {
+          if (i !== items.length - 1) {
+            itemNames += items[i].name + ', ';
+          } else {
+            itemNames += items[i].name;
+          }
         }
-      }
-      setMyFridgeItems(itemNames);
-      fetchMyRecipes();
-    });
+        setMyFridgeItems(itemNames);
+        fetchMyRecipes();
+      });
   }, []);
 
   return (
@@ -157,7 +164,10 @@ function SearchRecipe() {
                   </Grid>
                 </Grid>
                 <Box sx={{ ml: 90, mb: 5 }}>
-                  <Button onClick={handleDefaultSearch} data-testid='searchRecipeWithMyFridge'>
+                  <Button
+                    onClick={handleDefaultSearch}
+                    data-testid='searchRecipeWithMyFridge'
+                  >
                     Search with my fridge items
                   </Button>
                 </Box>
