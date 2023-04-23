@@ -20,8 +20,10 @@ interface Option {
 function RecipeCollection() {
   const { user } = useAuth();
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
-  const [filteredLoadedRecipes, setFilteredLoadedRecipes] = useState(new Map<number, Recipe>());
-  const [sortOption, setSortOption] = useState("");
+  const [filteredLoadedRecipes, setFilteredLoadedRecipes] = useState(
+    new Map<number, Recipe>()
+  );
+  const [sortOption, setSortOption] = useState('');
 
   const loadItems = () => {
     APIService.getInstance()
@@ -84,7 +86,7 @@ function RecipeCollection() {
 
   const handleFilterChange = (value: string[]) => {
     if (value) {
-      let map = new Map<number, Recipe>()
+      let map = new Map<number, Recipe>();
       switch (value[0]) {
         case 'no':
           setFilteredLoadedRecipes(loadedRecipes);
@@ -126,32 +128,42 @@ function RecipeCollection() {
     if (value) {
       setSortOption(value[0]);
     } else {
-      setSortOption("");
+      setSortOption('');
     }
   };
 
   return (
     <React.Fragment>
       <AppAppBar />
-        <AppForm>
-          <React.Fragment>
-            <Typography
-              variant='h4'
-              gutterBottom
-              marked='center'
-              align='center'
-            >
-              My Recipes
-            </Typography>
-            <div className='align-right' style={{margin: '10px'}}>
-              <Cascader data-testid='filterCascader' options={filterOptions} onChange={handleFilterChange} placeholder="Please select filter"/>
-              <Cascader data-testid='sortCascader' style={{marginLeft: '10px'}} options={sortOptions} onChange={handleSortChange} placeholder="Sort options"/>
-            </div>
-          </React.Fragment>
-          <Box sx={{ flexGrow: 1 }}>
-            <CollectionCardGrid loadedRecipes={filteredLoadedRecipes} loadItems={loadItems} sortOption={sortOption}/>
-          </Box>
-        </AppForm>
+      <AppForm>
+        <React.Fragment>
+          <Typography variant='h4' gutterBottom marked='center' align='center'>
+            My Recipes
+          </Typography>
+          <div className='align-right' style={{ margin: '10px' }}>
+            <Cascader
+              data-testid='filterCascader'
+              options={filterOptions}
+              onChange={handleFilterChange}
+              placeholder='Please select filter'
+            />
+            <Cascader
+              data-testid='sortCascader'
+              style={{ marginLeft: '10px' }}
+              options={sortOptions}
+              onChange={handleSortChange}
+              placeholder='Sort options'
+            />
+          </div>
+        </React.Fragment>
+        <Box sx={{ flexGrow: 1 }}>
+          <CollectionCardGrid
+            loadedRecipes={filteredLoadedRecipes}
+            loadItems={loadItems}
+            sortOption={sortOption}
+          />
+        </Box>
+      </AppForm>
       <AppFooter />
     </React.Fragment>
   );

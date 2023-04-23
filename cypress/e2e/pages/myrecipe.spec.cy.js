@@ -574,7 +574,7 @@ describe('/myrecipe', () => {
 });
 
 // Test - Filter for recipe collection
-it("Able to filter recipes with 'Not Tried' Flag'", () => {
+it("Able to filter recipes with 'Not Tried' Flag", () => {
   visitRecipes();
   cy.get(getElementByName('query')).type('onion');
   cy.get(getElementByDataTestId('SearchIcon'))
