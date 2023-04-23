@@ -106,7 +106,7 @@ function TextField(props: OnePirateTextFieldProps) {
             {
               [classes.inputBorder]: !noBorder,
             },
-            InputPropsClassesInput,
+            InputPropsClassesInput
           ),
           ...InputPropsClassesOther,
         },

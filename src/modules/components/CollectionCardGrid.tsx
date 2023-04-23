@@ -8,7 +8,6 @@ export default function CollectionCardGrid(props: {
   loadedRecipes: Map<number, Recipe>;
   sortOption: string;
 }) {
-
   return (
     <List
       width={'70%'}
@@ -23,9 +22,15 @@ export default function CollectionCardGrid(props: {
           case 'name_dsc':
             return -i1.title.localeCompare(i2.title);
           case 'added_datetime_asc':
-            return (i1.addedDateTime?.seconds ?? 0) - (i2.addedDateTime?.seconds ?? 0);
+            return (
+              (i1.addedDateTime?.seconds ?? 0) -
+              (i2.addedDateTime?.seconds ?? 0)
+            );
           case 'added_datetime_dsc':
-            return (i2.addedDateTime?.seconds ?? 0) - (i1.addedDateTime?.seconds ?? 0);
+            return (
+              (i2.addedDateTime?.seconds ?? 0) -
+              (i1.addedDateTime?.seconds ?? 0)
+            );
         }
         return -1;
       })}

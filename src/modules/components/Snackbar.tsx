@@ -39,9 +39,9 @@ const styles = ({ theme }: { theme: Theme }) =>
   } as const);
 
 function Transition(
-  props: TransitionProps & { children: React.ReactElement<any, any> },
+  props: TransitionProps & { children: React.ReactElement<any, any> }
 ) {
-  return <Slide {...props} direction="down" />;
+  return <Slide {...props} direction='down' />;
 }
 
 interface ExtraSnackbarProps {
@@ -68,9 +68,9 @@ function Snackbar(props: SnackbarProps & ExtraSnackbarProps) {
       }
       action={[
         <IconButton
-          key="close"
-          aria-label="close"
-          color="inherit"
+          key='close'
+          aria-label='close'
+          color='inherit'
           className={classes.close}
           onClick={() => closeFunc && closeFunc()}
         >

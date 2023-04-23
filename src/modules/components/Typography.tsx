@@ -77,7 +77,7 @@ const variantMapping = {
 };
 
 function Typography<C extends React.ElementType>(
-  props: TypographyProps<C, { component?: C }> & ExtraTypographyProps,
+  props: TypographyProps<C, { component?: C }> & ExtraTypographyProps
 ) {
   const { children, variant, marked = 'none', ...other } = props;
 
