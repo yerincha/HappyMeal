@@ -48,18 +48,39 @@ function LoadedItem(props: {
     if (value) {
       setExpiredAt(Timestamp.fromDate(value.toDate()));
     }
-  }
+  };
 
   return (
     <List.Item data-testid='myItem'>
-      <Stack width={'100%'} direction={'row'} spacing={2} justifyContent="space-between" alignItems="center">
+      <Stack
+        width={'100%'}
+        direction={'row'}
+        spacing={2}
+        justifyContent='space-between'
+        alignItems='center'
+      >
         <Stack width={'30%'}>
           <Text strong>{props.item.name}</Text>
         </Stack>
-        <InputNumber data-testid='myItemQuantity' min={1} max={100} defaultValue={props.item.quantity} onChange={handleQuantityChange}/>
-        <DatePicker data-testid='myItemDate'defaultValue={dayjs(props.item.expiredAt?.toDate())} format={'YYYY/MM/DD'}  onChange={handleDateChange}/>
-        <Button type="dashed" onClick={handleSave} data-testid='saveButton'>Update</Button>
-        <Button type="dashed" onClick={handleDelete} data-testid='removeButton'>Remove</Button>
+        <InputNumber
+          data-testid='myItemQuantity'
+          min={1}
+          max={100}
+          defaultValue={props.item.quantity}
+          onChange={handleQuantityChange}
+        />
+        <DatePicker
+          data-testid='myItemDate'
+          defaultValue={dayjs(props.item.expiredAt?.toDate())}
+          format={'YYYY/MM/DD'}
+          onChange={handleDateChange}
+        />
+        <Button type='dashed' onClick={handleSave} data-testid='saveButton'>
+          Update
+        </Button>
+        <Button type='dashed' onClick={handleDelete} data-testid='removeButton'>
+          Remove
+        </Button>
       </Stack>
     </List.Item>
   );
