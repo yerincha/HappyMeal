@@ -43,48 +43,48 @@ function SearchRecipe() {
     setSearchResults(data);
   };
 
-  const handleRealSearch = (values: { query: string }) => {
-    if (values.query === undefined || !values.query.length) {
-      return alert('Please enter the ingredients!');
-    }
-    const options = {
-      method: 'GET',
-      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
-      params: {
-        ingredients: values.query,
-        number: '50',
-        ignorePantry: 'true',
-        ranking: '1',
-      },
-      headers: {
-        'X-RapidAPI-Key': API_KEY,
-        'X-RapidAPI-Host':
-          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
-      },
-    };
-    axios
-      .request(options)
-      .then(function (response) {
-        console.log(response);
-        let data = [];
-        for (let i = 0; i < response.data.length; i++) {
-          let item = response.data[i];
-          let recipe = new Recipe(
-            item.id,
-            item.title,
-            item.image,
-            false,
-            false,
-            -1
-          );
-          data.push(recipe);
-        }
-        setSearchResults(data);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  };
+  // const handleSearch = (values: { query: string }) => {
+  //   if (values.query === undefined || !values.query.length) {
+  //     return alert('Please enter the ingredients!');
+  //   }
+  //   const options = {
+  //     method: 'GET',
+  //     url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
+  //     params: {
+  //       ingredients: values.query,
+  //       number: '50',
+  //       ignorePantry: 'true',
+  //       ranking: '1',
+  //     },
+  //     headers: {
+  //       'X-RapidAPI-Key': API_KEY,
+  //       'X-RapidAPI-Host':
+  //         'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+  //     },
+  //   };
+  //   axios
+  //     .request(options)
+  //     .then(function (response) {
+  //       console.log(response);
+  //       let data = [];
+  //       for (let i = 0; i < response.data.length; i++) {
+  //         let item = response.data[i];
+  //         let recipe = new Recipe(
+  //           item.id,
+  //           item.title,
+  //           item.image,
+  //           false,
+  //           false,
+  //           -1
+  //         );
+  //         data.push(recipe);
+  //       }
+  //       setSearchResults(data);
+  //     })
+  //     .catch(function (error) {
+  //       console.error(error);
+  //     });
+  // };
 
   const handleDefaultSearch = () => {
     if (myFridgeItems.length === 0) {
@@ -101,10 +101,10 @@ function SearchRecipe() {
             }
           }
           setMyFridgeItems(itemNames);
-          handleRealSearch({ query: itemNames });
+          handleSearch({ query: itemNames });
         });
     }
-    handleRealSearch({ query: myFridgeItems });
+    handleSearch({ query: myFridgeItems });
   };
 
   const fetchMyRecipes = () => {
@@ -152,12 +152,12 @@ function SearchRecipe() {
             </Typography>
           </React.Fragment>
           <Form
-            onSubmit={handleRealSearch}
-            render={({ handleSubmit: handleRealSearch }) => (
+            onSubmit={handleSearch}
+            render={({ handleSubmit: handleSearch }) => (
               <Box
                 component='form'
                 noValidate
-                onSubmit={handleRealSearch}
+                onSubmit={handleSearch}
                 sx={{ mt: 2 }}
               >
                 <Grid container>
@@ -179,7 +179,7 @@ function SearchRecipe() {
                     />
                   </Grid>
                   <Grid item sx={{ p: 2, mt: 4 }}>
-                    <SearchIcon onClick={handleRealSearch} />
+                    <SearchIcon onClick={handleSearch} />
                   </Grid>
                 </Grid>
                 <Box sx={{ ml: 90, mb: 5 }}>

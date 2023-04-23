@@ -1171,3 +1171,477 @@ it('Able to sort recipes by added date time descending order', () => {
         });
     });
 });
+// Test - Combination of filter and sort
+  // Test1 - Not tried Name ASC
+  it("Able to filter recipes with 'Not Tried' Flag with Name ASC order", () => {
+    visitRecipes();
+    cy.get(getElementByName('query')).type('onion');
+    cy.get(getElementByDataTestId('SearchIcon'))
+      .click()
+      .wait(1000)
+      .then(() => {
+        cy.get("[data-testid='addRecipeButton']")
+        .each(($el) => {
+          cy.wrap($el).click()
+        })
+      })
+      .wait(500)
+      .then(() => {
+        visitMyRecipe();
+
+        // Show 6 recipes
+        cy.get(getElementByDataTestId('triedButton')).should("have.length", 6)
+
+        cy.get(getElementByDataTestId('triedButton'))
+          .first()
+          .click()
+          .wait(500)
+          .then(() => {
+            cy.get(getElementByDataTestId('filterCascader'))
+              .click()
+              .wait(100)
+              .type('{downArrow}{downArrow}{enter}')
+              .wait(500)
+              .then(() => {
+                // Show 5 recipes which are not tried yet
+                cy.get('[class="ant-list-item"]').should("have.length", 5)
+
+                // Select Sort with name ASC
+                cy.get(getElementByDataTestId('sortCascader'))
+                  .click()
+                  .wait(100)
+                  .type('{downArrow}{downArrow}{enter}')
+                  .wait(500)
+                  .then(() => {
+                    // Show 5 recipes Not tried
+                    cy.get('[class="ant-list-item"]').should("have.length", 5);
+
+                    // Show recipes with ascending order
+                    var titles = [];
+                    cy.get("[data-testid='recipeTitle']").each($el => {
+                      titles.push($el.text());
+                    });
+
+                    cy.wrap(titles).should("equal", titles.sort()); // you may need deep equal here instead
+
+                    // Deleting items
+                    visitMyRecipe();
+                    for (let i = 0; i < 6; i++) {
+                      visitMyRecipe();
+                      cy.get("[data-testid='deleteButton']").first().click().wait(500);
+                    }
+                  });
+              });
+          });
+      });
+  });
+
+
+  // Test2 - Not tried Added Date DSC
+  it("Able to filter recipes with 'Not Tried' Flag with Added Date DSC order", () => {
+    visitRecipes();
+    cy.get(getElementByName('query')).type('onion');
+    cy.get(getElementByDataTestId('SearchIcon'))
+      .click()
+      .wait(1000)
+      .then(() => {
+        cy.get("[data-testid='addRecipeButton']")
+        .each(($el) => {
+          cy.wrap($el).click()
+        })
+      })
+      .wait(500)
+      .then(() => {
+        visitMyRecipe();
+
+        // Show 6 recipes
+        cy.get(getElementByDataTestId('triedButton')).should("have.length", 6)
+
+        cy.get(getElementByDataTestId('triedButton'))
+          .first()
+          .click()
+          .wait(500)
+          .then(() => {
+            cy.get(getElementByDataTestId('filterCascader'))
+              .click()
+              .wait(100)
+              .type('{downArrow}{downArrow}{enter}')
+              .wait(500)
+              .then(() => {
+                // Show 5 recipes which are not tried yet
+                cy.get('[class="ant-list-item"]').should("have.length", 5)
+
+                // Select Sort with added date time DSC
+                cy.get(getElementByDataTestId('sortCascader'))
+                  .click()
+                  .wait(100)
+                  .type('{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{enter}')
+                  .wait(500)
+                  .then(() => {
+                    // Show 5 recipes Not tried
+                    cy.get('[class="ant-list-item"]').should("have.length", 5);
+
+                    // Show recipes with ascending order
+                    var times = [];
+                    cy.get("[data-testid='recipeAddedDateTime']").each($el => {
+                      cy.wrap($el).invoke('attr', 'data-time').then((ts) => {
+                        times.push(ts);
+                      });
+                    });
+
+                    cy.wrap(times).should("equal", times.sort().reverse()); // you may need deep equal here instead
+
+                    // Deleting items
+                    visitMyRecipe();
+                    for (let i = 0; i < 6; i++) {
+                      visitMyRecipe();
+                      cy.get("[data-testid='deleteButton']").first().click().wait(500);
+                    }
+                  });
+              });
+          });
+      });
+  });
+
+
+
+  //Test3 - Tried Name DSC
+  it("Able to filter recipes with 'Tried' Flag with Name ASC order", () => {
+    visitRecipes();
+    cy.get(getElementByName('query')).type('onion');
+    cy.get(getElementByDataTestId('SearchIcon'))
+      .click()
+      .wait(1000)
+      .then(() => {
+        cy.get("[data-testid='addRecipeButton']")
+        .each(($el) => {
+          cy.wrap($el).click()
+        })
+      })
+      .wait(500)
+      .then(() => {
+        visitMyRecipe();
+
+        // Show 6 recipes
+        cy.get(getElementByDataTestId('triedButton')).should("have.length", 6)
+
+        cy.get(getElementByDataTestId('triedButton'))
+          .first()
+          .click()
+          .wait(500)
+          .then(() => {
+            cy.get(getElementByDataTestId('triedButton'))
+              .eq(2)
+              .click()
+              .wait(500).then(() => {
+                cy.get(getElementByDataTestId('triedButton'))
+                  .eq(3)
+                  .click()
+                  .wait(500).then(() => {
+                    cy.get(getElementByDataTestId('filterCascader'))
+                      .click()
+                      .wait(100)
+                      .type('{downArrow}{downArrow}{downArrow}{enter}')
+                      .wait(500)
+                      .then(() => {
+                        // Show 3 recipes which are tried
+                        cy.get('[class="ant-list-item"]').should("have.length", 3)
+
+                        // Select Sort with name ASC
+                        cy.get(getElementByDataTestId('sortCascader'))
+                          .click()
+                          .wait(100)
+                          .type('{downArrow}{downArrow}{enter}')
+                          .wait(500)
+                          .then(() => {
+                            // Show 3 recipes tried
+                            cy.get('[class="ant-list-item"]').should("have.length", 3);
+
+                            // Show recipes with ascending order
+                            var titles = [];
+                            cy.get("[data-testid='recipeTitle']").each($el => {
+                              titles.push($el.text());
+                            });
+
+                            cy.wrap(titles).should("equal", titles.sort()); // you may need deep equal here instead
+
+                            // Deleting items
+                            visitMyRecipe();
+                            for (let i = 0; i < 6; i++) {
+                              visitMyRecipe();
+                              cy.get("[data-testid='deleteButton']").first().click().wait(500);
+                            }
+                          });
+                      });
+                  })
+              })
+          });
+      });
+  });
+
+
+  // Test4 - Tried Added Date ASC
+  it("Able to filter recipes with 'Tried' Flag with Name ASC order", () => {
+    visitRecipes();
+    cy.get(getElementByName('query')).type('onion');
+    cy.get(getElementByDataTestId('SearchIcon'))
+      .click()
+      .wait(1000)
+      .then(() => {
+        cy.get("[data-testid='addRecipeButton']")
+        .each(($el) => {
+          cy.wrap($el).click()
+        })
+      })
+      .wait(500)
+      .then(() => {
+        visitMyRecipe();
+
+        // Show 6 recipes
+        cy.get(getElementByDataTestId('triedButton')).should("have.length", 6)
+
+        cy.get(getElementByDataTestId('triedButton'))
+          .first()
+          .click()
+          .wait(500)
+          .then(() => {
+            cy.get(getElementByDataTestId('triedButton'))
+              .eq(2)
+              .click()
+              .wait(500).then(() => {
+                cy.get(getElementByDataTestId('triedButton'))
+                  .eq(3)
+                  .click()
+                  .wait(500).then(() => {
+                    cy.get(getElementByDataTestId('filterCascader'))
+                      .click()
+                      .wait(100)
+                      .type('{downArrow}{downArrow}{downArrow}{enter}')
+                      .wait(500)
+                      .then(() => {
+                        // Show 3 recipes which are tried
+                        cy.get('[class="ant-list-item"]').should("have.length", 3)
+
+                        // Select Sort with Added DateTime ASC
+                        cy.get(getElementByDataTestId('sortCascader'))
+                          .click()
+                          .wait(100)
+                          .type('{downArrow}{downArrow}{downArrow}{downArrow}{enter}')
+                          .wait(500)
+                          .then(() => {
+                            // Show 3 recipes tried
+                            cy.get('[class="ant-list-item"]').should("have.length", 3);
+
+                            // Show recipes with ascending order
+                            var times = [];
+                            cy.get("[data-testid='recipeAddedDateTime']").each($el => {
+                              cy.wrap($el).invoke('attr', 'data-time').then((ts) => {
+                                times.push(ts);
+                              });
+                            });
+
+                            cy.wrap(times).should("equal", times.sort()); // you may need deep equal here instead
+
+                            // Deleting items
+                            visitMyRecipe();
+                            for (let i = 0; i < 6; i++) {
+                              visitMyRecipe();
+                              cy.get("[data-testid='deleteButton']").first().click().wait(500);
+                            }
+                          });
+                      });
+                  })
+              })
+          });
+      });
+  });
+
+
+  // Test5 - Good Rating Name ASC
+  it("Able to filter recipes with 'Not Tried' Flag with Name ASC order", () => {
+    visitRecipes();
+    cy.get(getElementByName('query')).type('onion');
+    cy.get(getElementByDataTestId('SearchIcon'))
+      .click()
+      .wait(1000)
+      .then(() => {
+        cy.get("[data-testid='addRecipeButton']")
+        .each(($el) => {
+          cy.wrap($el).click()
+        })
+      })
+      .wait(500)
+      .then(() => {
+        visitMyRecipe();
+
+        // Show 6 recipes
+        cy.get(getElementByDataTestId('triedButton')).should("have.length", 6)
+
+        cy.get(getElementByDataTestId('triedButton'))
+          .eq(0)
+          .click({force: true})
+          .wait(500)
+          .then(() => {
+            cy.get(getElementByDataTestId('triedButton'))
+              .eq(1)
+              .click({force: true})
+              .wait(500).then(() => {
+                cy.get(getElementByDataTestId('triedButton'))
+                  .eq(2)
+                  .click({force: true})
+                  .wait(500).then(() => {
+                    cy.get("[class='ant-rate-star-second']")
+                      .eq(4)
+                      .click({force: true})
+                      .wait(1000)
+                      .then(() => {
+                        cy.get("[class='ant-rate-star-second']")
+                          .eq(9)
+                          .click({force: true})
+                          .wait(1000)
+                          .then(() => {
+                            cy.get("[class='ant-rate-star-second']")
+                              .eq(14)
+                              .click({force: true})
+                              .wait(1000)
+                              .then(() => {
+                                cy.get(getElementByDataTestId('filterCascader'))
+                                  .click()
+                                  .wait(100)
+                                  .type('{downArrow}{downArrow}{downArrow}{enter}')
+                                  .wait(500)
+                                  .then(() => {
+                                    // Show 3 recipes which are good rating
+                                    cy.get('[class="ant-list-item"]').should("have.length", 3)
+
+                                    // Select Sort with name ASC
+                                    cy.get(getElementByDataTestId('sortCascader'))
+                                      .click()
+                                      .wait(100)
+                                      .type('{downArrow}{downArrow}{enter}')
+                                      .wait(500)
+                                      .then(() => {
+                                        // Show 3 recipes tried
+                                        cy.get('[class="ant-list-item"]').should("have.length", 3);
+
+                                        // Show recipes with ascending order
+                                        var titles = [];
+                                        cy.get("[data-testid='recipeTitle']").each($el => {
+                                          titles.push($el.text());
+                                        });
+
+                                        cy.wrap(titles).should("equal", titles.sort()); // you may need deep equal here instead
+
+                                        // Deleting items
+                                        visitMyRecipe();
+                                        for (let i = 0; i < 6; i++) {
+                                          visitMyRecipe();
+                                          cy.get("[data-testid='deleteButton']").first().click().wait(500);
+                                        }
+                                      });
+                                  });
+                              });
+                          });
+                      });                    
+                  })
+              })
+          });
+      });
+  });
+
+
+
+
+  // Test6 - Good Rating Added Date ASC 
+  it("Able to filter recipes with 'Not Tried' Flag with Name ASC order", () => {
+    visitRecipes();
+    cy.get(getElementByName('query')).type('onion');
+    cy.get(getElementByDataTestId('SearchIcon'))
+      .click()
+      .wait(1000)
+      .then(() => {
+        cy.get("[data-testid='addRecipeButton']")
+        .each(($el) => {
+          cy.wrap($el).click()
+        })
+      })
+      .wait(500)
+      .then(() => {
+        visitMyRecipe();
+
+        // Show 6 recipes
+        cy.get(getElementByDataTestId('triedButton')).should("have.length", 6)
+
+        cy.get(getElementByDataTestId('triedButton'))
+          .eq(0)
+          .click({force: true})
+          .wait(500)
+          .then(() => {
+            cy.get(getElementByDataTestId('triedButton'))
+              .eq(1)
+              .click({force: true})
+              .wait(500).then(() => {
+                cy.get(getElementByDataTestId('triedButton'))
+                  .eq(2)
+                  .click({force: true})
+                  .wait(500).then(() => {
+                    cy.get("[class='ant-rate-star-second']")
+                      .eq(4)
+                      .click({force: true})
+                      .wait(1000)
+                      .then(() => {
+                        cy.get("[class='ant-rate-star-second']")
+                          .eq(9)
+                          .click({force: true})
+                          .wait(1000)
+                          .then(() => {
+                            cy.get("[class='ant-rate-star-second']")
+                              .eq(14)
+                              .click({force: true})
+                              .wait(1000)
+                              .then(() => {
+                                cy.get(getElementByDataTestId('filterCascader'))
+                                  .click()
+                                  .wait(100)
+                                  .type('{downArrow}{downArrow}{downArrow}{enter}')
+                                  .wait(500)
+                                  .then(() => {
+                                    // Show 3 recipes which are good rating
+                                    cy.get('[class="ant-list-item"]').should("have.length", 3)
+
+                                    // Select Sort with added DateTime ASC
+                                    cy.get(getElementByDataTestId('sortCascader'))
+                                      .click()
+                                      .wait(100)
+                                      .type('{downArrow}{downArrow}{downArrow}{downArrow}{enter}')
+                                      .wait(500)
+                                      .then(() => {
+                                        // Show 3 recipes tried
+                                        cy.get('[class="ant-list-item"]').should("have.length", 3);
+
+                                        // Show recipes with ascending order
+                                        var times = [];
+                                        cy.get("[data-testid='recipeAddedDateTime']").each($el => {
+                                          cy.wrap($el).invoke('attr', 'data-time').then((ts) => {
+                                            times.push(ts);
+                                          });
+                                        });
+
+                                        cy.wrap(times).should("equal", times.sort()); // you may need deep equal here instead
+
+                                        // Deleting items
+                                        visitMyRecipe();
+                                        for (let i = 0; i < 6; i++) {
+                                          visitMyRecipe();
+                                          cy.get("[data-testid='deleteButton']").first().click().wait(500);
+                                        }
+                                      });
+                                  });
+                              });
+                          });
+                      });                    
+                  })
+              })
+          });
+      });
+  });
