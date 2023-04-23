@@ -11,11 +11,11 @@ export default defineConfig({
     video: false,
     screenshotOnRunFailure: false,
     setupNodeEvents(on, config) {
-      require('@bahmutov/cypress-code-coverage/plugin')(on, config)
-      return config
+      require('@bahmutov/cypress-code-coverage/plugin')(on, config);
+      return config;
     },
-    supportFile: "cypress/support/index.js",
-    supportFolder: "cypress/support",
+    supportFile: 'cypress/support/index.js',
+    supportFolder: 'cypress/support',
   },
 
   component: {
