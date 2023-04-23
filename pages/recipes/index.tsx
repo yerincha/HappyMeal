@@ -17,6 +17,7 @@ import { useAuth } from '../../src/context/AuthContext';
 import Item from '../../src/model/Item';
 import CardGrid from '../../src/modules/components/CardGrid';
 import Recipe from '../../src/model/Recipe';
+import { fakeSearchResult } from './fake_search_onion.js';
 
 function SearchRecipe() {
   const { user } = useAuth();
@@ -25,6 +26,24 @@ function SearchRecipe() {
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
 
   const handleSearch = (values: { query: string }) => {
+    let data = [];
+    for (let i = 0; i < fakeSearchResult.length; i++) {
+      let item = fakeSearchResult[i];
+      let recipe = new Recipe(
+        item.id,
+        item.title,
+        item.image,
+        false,
+        false,
+        -1
+      );
+      data.push(recipe);
+    }
+
+    setSearchResults(data);
+  };
+
+  const handleRealSearch = (values: { query: string }) => {
     if (values.query === undefined || !values.query.length) {
       return alert('Please enter the ingredients!');
     }
@@ -82,10 +101,10 @@ function SearchRecipe() {
             }
           }
           setMyFridgeItems(itemNames);
-          handleSearch({ query: itemNames });
+          handleRealSearch({ query: itemNames });
         });
     }
-    handleSearch({ query: myFridgeItems });
+    handleRealSearch({ query: myFridgeItems });
   };
 
   const fetchMyRecipes = () => {
@@ -133,12 +152,12 @@ function SearchRecipe() {
             </Typography>
           </React.Fragment>
           <Form
-            onSubmit={handleSearch}
-            render={({ handleSubmit: handleSearch }) => (
+            onSubmit={handleRealSearch}
+            render={({ handleSubmit: handleRealSearch }) => (
               <Box
                 component='form'
                 noValidate
-                onSubmit={handleSearch}
+                onSubmit={handleRealSearch}
                 sx={{ mt: 2 }}
               >
                 <Grid container>
@@ -160,7 +179,7 @@ function SearchRecipe() {
                     />
                   </Grid>
                   <Grid item sx={{ p: 2, mt: 4 }}>
-                    <SearchIcon onClick={handleSearch} />
+                    <SearchIcon onClick={handleRealSearch} />
                   </Grid>
                 </Grid>
                 <Box sx={{ ml: 90, mb: 5 }}>
