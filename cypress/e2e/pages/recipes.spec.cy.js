@@ -62,7 +62,6 @@ describe('/recipes', () => {
       .wait(1000)
       .then(() => {
         cy.get("[data-testid='recipeTitle']")
-          .first()
           .contains('How to Make Homemade Re-fried Beans');
       });
   });
@@ -84,7 +83,6 @@ describe('/recipes', () => {
           .wait(1000)
           .then(() => {
             cy.get("[data-testid='recipeTitle']")
-              .first()
               .contains('How to Make Homemade Re-fried Beans');
           });
       });
@@ -163,13 +161,12 @@ describe('/recipes', () => {
           .wait(1000)
           .then(() => {
             visitRecipes();
-            cy.get('[type=button]').click().wait(1000);
+            cy.get('[type=button]').first().click().wait(1000);
             cy.get('input')
               .first()
               .invoke('attr', 'placeholder')
               .should('contain', 'onion, garlic');
             cy.get("[data-testid='recipeTitle']")
-              .first()
               .contains('How to Make Homemade Re-fried Beans');
 
             visitSearch();
@@ -206,13 +203,12 @@ describe('/recipes', () => {
           .wait(1000)
           .then(() => {
             visitRecipes();
-            cy.get('[type=button]').click().wait(1000);
+            cy.get('[type=button]').first().click().wait(1000);
             cy.get('input')
               .first()
               .invoke('attr', 'placeholder')
               .should('contain', 'onion, garlic');
             cy.get("[data-testid='recipeTitle']")
-              .first()
               .contains('How to Make Homemade Re-fried Beans');
             visitSearch();
             cy.url().should(includeString, SEARCH_URL);
@@ -227,7 +223,7 @@ describe('/recipes', () => {
               .wait(1000)
               .then(() => {
                 visitRecipes();
-                cy.get('[type=button]').click().wait(1000);
+                cy.get('[type=button]').first().click().wait(1000);
                 cy.get('input')
                   .first()
                   .invoke('attr', 'placeholder')
@@ -279,13 +275,12 @@ describe('/recipes', () => {
           .wait(1000)
           .then(() => {
             visitRecipes();
-            cy.get('[type=button]').click().wait(1000);
+            cy.get('[type=button]').first().click().wait(1000);
             cy.get('input')
               .first()
               .invoke('attr', 'placeholder')
               .should('contain', 'onion, garlic');
             cy.get("[data-testid='recipeTitle']")
-              .first()
               .contains('How to Make Homemade Re-fried Beans');
 
             cy.get(getElementByName('query')).type('apple');

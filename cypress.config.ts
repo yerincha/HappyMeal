@@ -12,6 +12,7 @@ export default defineConfig({
     screenshotOnRunFailure: false,
     setupNodeEvents(on, config) {
       require('@bahmutov/cypress-code-coverage/plugin')(on, config);
+      require('@cypress/code-coverage/task')(on, config)
       return config;
     },
     supportFile: 'cypress/support/index.js',

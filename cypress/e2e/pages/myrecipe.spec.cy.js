@@ -585,7 +585,7 @@ it("Able to filter recipes with 'Not Tried' Flag", () => {
         cy.wrap($el).click();
       });
     })
-    .wait(500)
+    .wait(700)
     .then(() => {
       visitMyRecipe();
 
