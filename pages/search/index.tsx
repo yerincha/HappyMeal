@@ -17,12 +17,28 @@ import Typography from '../../src/modules/components/Typography';
 import { Divider, List } from 'antd';
 import SearchedItem from '../../src/modules/components/SearchedItem';
 import LoadedItem from '../../src/modules/components/LoadedItem';
+import { fakeSearchResultOnion } from './fake_search_onion.js';
+import { fakeSearchResultGarlic } from './fake_search_garlic.js';
+import { fakeSearchResultPasta } from './fake_search_pasta.js';
 
 function Search() {
   const { user } = useAuth();
   const [searchResults, setSearchResults] = useState(new Array<Item>());
   const [loadedItems, setLoadedItems] = useState(new Map<number, Item>());
 
+  // const handleSearch = (values: { ingredient: string }) => {
+  //   let result = new Array<Item>();
+
+  //   if (values.ingredient === 'onion') {
+  //     result = fakeSearchResultOnion;
+  //   } else if (values.ingredient === 'garlic') {
+  //     result = fakeSearchResultGarlic;
+  //   } else if (values.ingredient === 'pasta') {
+  //     result = fakeSearchResultPasta;
+  //   }
+
+  //   setSearchResults(result);
+  // };
   const handleSearch = (values: { ingredient: string }) => {
     if (values.ingredient === undefined || !values.ingredient.length) {
       return alert('Please enter the ingredient!');

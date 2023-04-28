@@ -17,7 +17,10 @@ import { useAuth } from '../../src/context/AuthContext';
 import Item from '../../src/model/Item';
 import CardGrid from '../../src/modules/components/CardGrid';
 import Recipe from '../../src/model/Recipe';
-import { fakeSearchResult } from './fake_search_onion.js';
+import { fakeSearchResultOnionGarlic } from './fake_search_onion_garlic.js';
+import { fakeSearchResultOnionGarlicPasta } from './fake_search_onion_garlic_pasta.js';
+import { fakeSearchResultApple } from './fake_search_apple.js';
+import { fakeSearchResultOnion } from './fake_search_onion.js';
 
 function SearchRecipe() {
   const { user } = useAuth();
@@ -25,66 +28,77 @@ function SearchRecipe() {
   const [myFridgeItems, setMyFridgeItems] = useState('');
   const [loadedRecipes, setLoadedRecipes] = useState(new Map<number, Recipe>());
 
-  const handleSearch = (values: { query: string }) => {
-    let data = [];
-    for (let i = 0; i < fakeSearchResult.length; i++) {
-      let item = fakeSearchResult[i];
-      let recipe = new Recipe(
-        item.id,
-        item.title,
-        item.image,
-        false,
-        false,
-        -1
-      );
-      data.push(recipe);
-    }
-
-    setSearchResults(data);
-  };
-
   // const handleSearch = (values: { query: string }) => {
-  //   if (values.query === undefined || !values.query.length) {
-  //     return alert('Please enter the ingredients!');
+  //   let result = [];
+
+  //   if (values.query === 'onion') {
+  //     result = fakeSearchResultOnion;
+  //   } else if (values.query === 'onion, garlic') {
+  //     result = fakeSearchResultOnionGarlic;
+  //   } else if (values.query === 'onion, garlic, pasta') {
+  //     result = fakeSearchResultOnionGarlicPasta;
+  //   } else if (values.query === 'apple') {
+  //     result = fakeSearchResultApple;
   //   }
-  //   const options = {
-  //     method: 'GET',
-  //     url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
-  //     params: {
-  //       ingredients: values.query,
-  //       number: '50',
-  //       ignorePantry: 'true',
-  //       ranking: '1',
-  //     },
-  //     headers: {
-  //       'X-RapidAPI-Key': API_KEY,
-  //       'X-RapidAPI-Host':
-  //         'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
-  //     },
-  //   };
-  //   axios
-  //     .request(options)
-  //     .then(function (response) {
-  //       console.log(response);
-  //       let data = [];
-  //       for (let i = 0; i < response.data.length; i++) {
-  //         let item = response.data[i];
-  //         let recipe = new Recipe(
-  //           item.id,
-  //           item.title,
-  //           item.image,
-  //           false,
-  //           false,
-  //           -1
-  //         );
-  //         data.push(recipe);
-  //       }
-  //       setSearchResults(data);
-  //     })
-  //     .catch(function (error) {
-  //       console.error(error);
-  //     });
+
+  //   let data = [];
+  //   for (let i = 0; i < result.length; i++) {
+  //     let item = result[i];
+  //     let recipe = new Recipe(
+  //       item.id,
+  //       item.title,
+  //       item.image,
+  //       false,
+  //       false,
+  //       -1
+  //     );
+  //     data.push(recipe);
+  //   }
+
+  //   setSearchResults(data);
   // };
+  const handleSearch = (values: { query: string }) => {
+    if (values.query === undefined || !values.query.length) {
+      return alert('Please enter the ingredients!');
+    }
+    const options = {
+      method: 'GET',
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
+      params: {
+        ingredients: values.query,
+        number: '50',
+        ignorePantry: 'true',
+        ranking: '1',
+      },
+      headers: {
+        'X-RapidAPI-Key': API_KEY,
+        'X-RapidAPI-Host':
+          'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+      },
+    };
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response);
+        let data = [];
+        for (let i = 0; i < response.data.length; i++) {
+          let item = response.data[i];
+          let recipe = new Recipe(
+            item.id,
+            item.title,
+            item.image,
+            false,
+            false,
+            -1
+          );
+          data.push(recipe);
+        }
+        setSearchResults(data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  };
 
   const handleDefaultSearch = () => {
     if (myFridgeItems.length === 0) {

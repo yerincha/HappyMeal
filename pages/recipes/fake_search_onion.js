@@ -1,4 +1,4 @@
-export const fakeSearchResult = [
+export const fakeSearchResultOnion = [
   {
       "id": 1089425,
       "title": "Charred spring onions",
